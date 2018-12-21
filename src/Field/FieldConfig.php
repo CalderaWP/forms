@@ -16,7 +16,7 @@ class FieldConfig
 	 */
 	public function getOptions(): FieldOptions
 	{
-		if( is_null( $this->options ) ){
+		if (is_null($this->options)) {
 			$this->options = new FieldOptions();
 		}
 		return $this->options;
@@ -38,7 +38,7 @@ class FieldConfig
 	{
 		$array = [];
 		/** @var FieldOption $option */
-		foreach ( $this->getOptions() as $option ){
+		foreach ($this->getOptions() as $option) {
 			$array[] = $option->toArray();
 		}
 

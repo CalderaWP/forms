@@ -6,9 +6,13 @@ namespace calderawp\caldera\Forms;
 use calderawp\interop\Collection;
 use calderawp\interop\Contracts\CalderaForms\HasForm as Form;
 use calderawp\interop\Contracts\CalderaForms\HasFields as Fields;
+use calderawp\interop\Traits\CalderaForms\ProvidesFields;
 
-class FieldsCollection extends Collection
+class FieldsCollection extends Collection implements Fields
 {
+
+	use ProvidesFields;
+
 
 	/**
 	 * Reset collection
@@ -17,7 +21,7 @@ class FieldsCollection extends Collection
 	 *
 	 * @return Collection
 	 */
-	public function setFields(Fields $fields) : Collection
+	public function setFields(Fields $fields) : Fields
 	{
 		$this->resetItems($fields);
 		return $this;

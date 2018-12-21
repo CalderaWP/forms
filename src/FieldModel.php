@@ -4,12 +4,7 @@
 namespace calderawp\caldera\Forms;
 
 use calderawp\caldera\Forms\Field\FieldConfig;
-use calderawp\interop\Contracts\CalderaForms\HasField;
-use calderawp\interop\Contracts\HasValue;
-use calderawp\interop\Contracts\HasSlug;
-use calderawp\interop\Contracts\HasLabel;
-use calderawp\interop\Contracts\HasDescription;
-use calderawp\interop\Contracts\CalderaForms\HasForm;
+use calderawp\caldera\Forms\Contracts\FieldModelContract;
 use calderawp\interop\Model;
 use calderawp\interop\Traits\CalderaForms\ProvidesField;
 use calderawp\interop\Traits\CalderaForms\ProvidesForm;
@@ -20,22 +15,25 @@ use calderawp\interop\Traits\ProvidesName;
 use calderawp\interop\Traits\ProvidesSlug;
 use calderawp\interop\Traits\ProvidesValue;
 
-class FieldModel extends Model implements HasForm, HasField, HasValue, HasSlug, HasLabel, HasDescription
+class FieldModel extends Model implements FieldModelContract
 {
 	use ProvidesValue, ProvidesField, ProvidesForm, ProvidesIdToModel, ProvidesName, ProvidesSlug,ProvidesLabel, ProvidesDescription;
-
 
 	/**
 	 * @var FieldConfig
 	 */
 	protected $fieldConfig;
+
+
 	public function getFieldConfig(): FieldConfig
 	{
-		if( is_null( $this->fieldConfig ) ){
-			$this->setFieldConfig( new FieldConfig() );
+
+		$this->getValue();
+
+		if (is_null($this->fieldConfig)) {
+			$this->setFieldConfig(new FieldConfig());
 		}
 		return  $this->fieldConfig;
-
 	}
 	public function setFieldConfig(FieldConfig$fieldConfig) : FieldModel
 	{

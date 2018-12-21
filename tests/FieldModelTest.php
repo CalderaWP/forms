@@ -124,13 +124,13 @@ class FieldModelTest extends TestCase
 		$this->assertEquals($config, $field->getFieldConfig());
 
 		$field->getFieldConfig()->setOptions($options);
-		$this->assertAttributeEquals( $options, 'options', $field->getFieldConfig() );
+		$this->assertAttributeEquals($options, 'options', $field->getFieldConfig());
 
-		$field->getFieldConfig()->getOptions()->removeOption($this->optionTwo() );
-		$this->assertFalse( $field->getFieldConfig()->getOptions()->hasOption($this->optionTwo()->getId()));
+		$field->getFieldConfig()->getOptions()->removeOption($this->optionTwo());
+		$this->assertFalse($field->getFieldConfig()->getOptions()->hasOption($this->optionTwo()->getId()));
 
 		$arrayed = $field->toArray();
-		$this->assertArrayHasKey( 'fieldConfig', $arrayed );
-		$this->assertEquals( $config->toArray(), $arrayed['fieldConfig'] );
+		$this->assertArrayHasKey('fieldConfig', $arrayed);
+		$this->assertEquals($config->toArray(), $arrayed['fieldConfig']);
 	}
 }
