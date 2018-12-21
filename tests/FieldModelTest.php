@@ -17,8 +17,7 @@ class FieldModelTest extends TestCase
 		$field = new FieldModel();
 		$value = 'food';
 		$field->setValue($value);
-		$this->assertEquals($value, $field->getValue($value) );
-
+		$this->assertEquals($value, $field->getValue($value));
 	}
 
 	/**
@@ -33,10 +32,9 @@ class FieldModelTest extends TestCase
 		$default = 'drinks';
 		$value = 'food';
 		$field->setDefault($default);
-		$this->assertEquals($default, $field->getValue($default) );
+		$this->assertEquals($default, $field->getValue($default));
 		$field->setValue($value);
-		$this->assertEquals($value, $field->getValue($value) );
-
+		$this->assertEquals($value, $field->getValue($value));
 	}
 
 	/**
@@ -54,10 +52,10 @@ class FieldModelTest extends TestCase
 		$field->setDefault($default);
 		$field->setValue($value);
 		$array = $field->toArray();
-		$this->assertEquals( $id, $array['id' ] );
-		$this->assertEquals( $default, $array['default' ] );
-		$this->assertEquals( $value, $array['value' ] );
-		$this->assertEquals( $form, $array['form' ] );
+		$this->assertEquals($id, $array['id' ]);
+		$this->assertEquals($default, $array['default' ]);
+		$this->assertEquals($value, $array['value' ]);
+		$this->assertEquals($form, $array['form' ]);
 	}
 
 	/**
@@ -79,12 +77,35 @@ class FieldModelTest extends TestCase
 				'default' => $default
 			]
 		);
-		$this->assertEquals($slug, $field->getSlug() );
-		$this->assertEquals($id, $field->getId() );
-		$this->assertEquals($value, $field->getValue() );
-		$this->assertEquals($default, $field->getDefault() );
-
+		$this->assertEquals($slug, $field->getSlug());
+		$this->assertEquals($id, $field->getId());
+		$this->assertEquals($value, $field->getValue());
+		$this->assertEquals($default, $field->getDefault());
 	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::toArray()
+	 */
+	public function testLabel()
+	{
+		$label = 'Your Name';
+		$field = new FieldModel();
+		$field->setLabel($label);
+		$this->assertEquals($label, $field->getLabel());
+		$array = $field->toArray();
+		$this->assertEquals($label, $array[ 'label' ]);
+	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::toArray()
+	 */
+	public function testDescription()
+	{
+		$description = 'Type Your Name';
+		$field = new FieldModel();
+		$field->setDescription($description);
+		$this->assertEquals($description, $field->getDescription());
+		$array = $field->toArray();
+		$this->assertEquals($description, $array[ 'description' ]);
+	}
 }
