@@ -8,6 +8,10 @@ use calderawp\caldera\Forms\FormModel;
 class FieldModelTest extends TestCase
 {
 
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::getValue()
+	 * @covers \calderawp\caldera\Forms\FieldModel::setValue()
+	 */
 	public function testSetGetValue()
 	{
 		$field = new FieldModel();
@@ -17,6 +21,12 @@ class FieldModelTest extends TestCase
 
 	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::getValue()
+	 * @covers \calderawp\caldera\Forms\FieldModel::setValue()
+	 * @covers \calderawp\caldera\Forms\FieldModel::getDefault()
+	 * @covers \calderawp\caldera\Forms\FieldModel::setDefault()
+	 */
 	public function testSetGetDefault()
 	{
 		$field = new FieldModel();
@@ -29,6 +39,9 @@ class FieldModelTest extends TestCase
 
 	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::toArray()
+	 */
 	public function testToArray()
 	{
 		$field = new FieldModel();
@@ -47,6 +60,9 @@ class FieldModelTest extends TestCase
 		$this->assertEquals( $form, $array['form' ] );
 	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::fromArray()
+	 */
 	public function testFromArray()
 	{
 		$default = 'drinks';
