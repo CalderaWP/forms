@@ -2,6 +2,7 @@
 
 namespace calderawp\caldera\Forms\Tests;
 
+use calderawp\caldera\Forms\Field\FieldConfig;
 use calderawp\caldera\Forms\FieldModel;
 use calderawp\caldera\Forms\FormModel;
 
@@ -107,5 +108,29 @@ class FieldModelTest extends TestCase
 		$this->assertEquals($description, $field->getDescription());
 		$array = $field->toArray();
 		$this->assertEquals($description, $array[ 'description' ]);
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::getFieldConfig()
+	 * @covers \calderawp\caldera\Forms\FieldModel::setFieldConfig()
+	 * @covers \calderawp\caldera\Forms\FieldModel::toArray()
+	 */
+	public function testFieldConfig()
+	{
+		$config = new FieldConfig();
+		$options = $this->fieldOptions();
+		$field = new FieldModel();
+		$field->setFieldConfig($config);
+		$this->assertEquals($config, $field->getFieldConfig());
+
+		$field->getFieldConfig()->setOptions($options);
+		$this->assertAttributeEquals( $options, 'options', $field->getFieldConfig() );
+
+		$field->getFieldConfig()->getOptions()->removeOption($this->optionTwo() );
+		$this->assertFalse( $field->getFieldConfig()->getOptions()->hasOption($this->optionTwo()->getId()));
+
+		$arrayed = $field->toArray();
+		$this->assertArrayHasKey( 'fieldConfig', $arrayed );
+		$this->assertEquals( $config->toArray(), $arrayed['fieldConfig'] );
 	}
 }

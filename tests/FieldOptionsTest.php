@@ -80,6 +80,7 @@ class FieldOptionsTest extends TestCase
 		$this->assertTrue($fieldOptions->hasOption($optTwo->getId()));
 		$this->assertFalse($fieldOptions->hasOption($this->optionOne()->getId()));
 	}
+
 	/**
 	 * @covers \calderawp\caldera\Forms\Field\FieldOptions::getOption();
 	 * @covers \calderawp\caldera\Forms\Field\FieldOptions::addOption();
@@ -91,25 +92,5 @@ class FieldOptionsTest extends TestCase
 		$fieldOptions->addOption($optTwo);
 		$fieldOptions->addOption($this->optionOne());
 		$this->assertEquals($optTwo, $fieldOptions->getOption($optTwo->getId()));
-	}
-
-	protected function optionTwo(): FieldOption
-	{
-		return FieldOption::fromArray([
-			'id' => 'opt22',
-			'value' => 'w',
-			'label' => 'Option Two',
-			'calcValue' => 2,
-		]);
-	}
-
-	protected function optionOne(): FieldOption
-	{
-		return FieldOption::fromArray([
-			'id' => 'opt1',
-			'value' => '1',
-			'label' => 'Option One',
-			'calcValue' => 1,
-		]);
 	}
 }
