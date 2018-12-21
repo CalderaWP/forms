@@ -62,19 +62,24 @@ class FieldModelTest extends TestCase
 
 	/**
 	 * @covers \calderawp\caldera\Forms\FieldModel::fromArray()
+	 * @covers \calderawp\caldera\Forms\FieldModel::getSlug()
+	 * @covers \calderawp\caldera\Forms\FieldModel::setSlug()
 	 */
 	public function testFromArray()
 	{
 		$default = 'drinks';
 		$value = 'food';
+		$slug = 'food_type';
 		$id = 'fld1';
 		$field = FieldModel::fromArray(
 			[
 				'id' => $id,
 				'value' => $value,
+				'slug' => $slug,
 				'default' => $default
 			]
 		);
+		$this->assertEquals($slug, $field->getSlug() );
 		$this->assertEquals($id, $field->getId() );
 		$this->assertEquals($value, $field->getValue() );
 		$this->assertEquals($default, $field->getDefault() );
