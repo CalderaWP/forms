@@ -49,12 +49,5 @@ class FormModelTest extends TestCase
 		$this->assertEquals($form, $array[ 'form' ]);
 		$this->assertEquals($fields, $array[ 'fields' ]);
 		$this->assertEquals($settings, $array[ 'settings' ]);
-
 	}
-
-
-
-
-
-
 }
