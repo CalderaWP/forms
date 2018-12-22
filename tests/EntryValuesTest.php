@@ -63,4 +63,50 @@ class EntryValuesTest extends TestCase
 
 		$this->assertCount(2, $values->getValues());
 	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Entry\EntryValues::toArray()
+	 * @covers \calderawp\caldera\Forms\Entry\EntryValue::toArray()
+	 * @covers \calderawp\caldera\Forms\Entry\EntryValue::fromArray()
+	 */
+	public function testFromArray()
+	{
+		$formId = 'cf1';
+		$form = $this->form($formId);
+		$fieldId1 = 'f1';
+		$fieldId2 = 'f12';
+		$entryId1 = 11 + rand(2, 8);
+		$entryId2 = 22 + rand(10, 20);
+		$field = $this->field($fieldId1, [], $form);
+		$field2 = $this->field($fieldId2, [], $form);
+		$entryValue = (new EntryValue($form, $field))->setId($entryId1);
+		$entryValue2 = (new EntryValue($form, $field2))->setId($entryId2);
+
+		$this->assertEquals($entryId1, $entryValue->getId());
+		$this->assertEquals($entryId2, $entryValue2->getId());
+
+
+		$values = EntryValues::fromArray([
+			$entryValue,
+			$entryValue2
+		]);
+		$this->assertTrue($values->hasValue($entryId1));
+		$this->assertTrue($values->hasValue($entryId2));
+		$this->assertEquals($entryValue, $values->getValue($entryId1));
+		$this->assertEquals($entryValue2, $values->getValue($entryId2));
+
+		$this->assertCount(2, $values->getValues());
+
+
+		$values = EntryValues::fromArray([
+			$entryValue->toArray(),
+			$entryValue2->toArray()
+		]);
+		$this->assertTrue($values->hasValue($entryId1));
+		$this->assertTrue($values->hasValue($entryId2));
+		$this->assertEquals($entryValue->getId(), $values->getValue($entryId1)->getId());
+		$this->assertEquals($entryValue2->getId(), $values->getValue($entryId2)->getId());
+
+		$this->assertCount(2, $values->getValues());
+	}
 }

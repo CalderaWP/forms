@@ -4,14 +4,44 @@
 namespace calderawp\caldera\Forms\Entry;
 
 use calderawp\caldera\Forms\Contracts\CollectsEntryValues;
+use calderawp\interop\Contracts\Arrayable;
 
-class EntryValues implements CollectsEntryValues
+class EntryValues implements CollectsEntryValues, Arrayable
 {
 
 	/**
 	 * @var
 	 */
 	protected $items;
+
+
+	public function toArray(): array
+	{
+		$array = [];
+		/** @var EntryValue $item */
+		foreach ($this->items as $item) {
+			$array[ $item->getId() ] = $item->toArray();
+		}
+		return $array;
+	}
+
+	public static function fromArray(array $items) : EntryValues
+	{
+		$obj = new static();
+		foreach ($items as $item) {
+			if (is_array($item)) {
+				$item = EntryValue::fromArray($item);
+			}
+			$obj->addValue($item);
+		}
+		return $obj;
+	}
+
+
+	public function jsonSerialize()
+	{
+		return $this->toArray();
+	}
 
 	/**
 	 * @param EntryValue $value
@@ -65,7 +95,6 @@ class EntryValues implements CollectsEntryValues
 	}
 
 
-
 	/**
 	 * @param string|int $idOrSlug
 	 *
@@ -75,7 +104,7 @@ class EntryValues implements CollectsEntryValues
 	{
 		if ($_value = $this->findById($idOrSlug)) {
 			return $_value;
-		} elseif ($_value =$this->findBySlug($idOrSlug)) {
+		} elseif ($_value = $this->findBySlug($idOrSlug)) {
 			return $_value;
 		} else {
 			return null;

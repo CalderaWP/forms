@@ -3,6 +3,7 @@
 
 namespace calderawp\caldera\Forms\Entry;
 
+use calderawp\caldera\Forms\FieldModel;
 use calderawp\caldera\Forms\FormModel;
 use calderawp\caldera\Forms\Contracts\FieldModelContract;
 use calderawp\caldera\Forms\Contracts\FormModelContract;
@@ -36,6 +37,67 @@ class EntryValue implements HasValue, HasSlug, HasId
 	{
 		$this->setForm($form);
 		$this->setField($field);
+	}
+
+	public static function fromArray(array $items): EntryValue
+	{
+		$form = null;
+		$field = null;
+		if (isset($items[ 'form' ])) {
+			$_value = $items[ 'form' ];
+			if (is_a($_value, FormModelContract::class)) {
+				$form = $_value;
+			} elseif (is_array($_value)) {
+				$form = FormModel::fromArray($_value);
+			}
+		} else {
+			if (isset($items[ 'formId' ])) {
+				$form = FormModel::fromArray(['id' => $items[ 'formId' ]]);
+			}
+		}
+		if (isset($items[ 'field' ])) {
+			$_value = $items[ 'field' ];
+			if (is_a($_value, FieldModelContract::class)) {
+				$field = $_value;
+			} elseif (is_array($_value)) {
+				$field = FieldModel::fromArray($_value);
+			}
+		} else {
+			if (isset($items[ 'fieldId' ])) {
+				$field = FieldModel::fromArray(['id' => $items[ 'fieldId' ]]);
+			}
+		}
+
+		$obj = new static($form, $field);
+		foreach ([
+				'id' => 'setId',
+					 'slug' => 'setSlug',
+					 'value' => 'setValue'
+				 ] as $key => $setter) {
+			if (! empty($items[$key])) {
+				try {
+					call_user_func([$obj, $setter], $items[ $key ]);
+				} catch (\Exception $e) {
+					//@todo forward exception
+				}
+			}
+		}
+
+
+
+		return $obj;
+	}
+
+
+	public function toArray()
+	{
+		return [
+			'fieldId' => $this->getFieldId(),
+			'formId' => $this->getFormId(),
+			'slug' => $this->getFieldSlug(),
+			'id' => $this->getId(),
+			'value' => $this->getValue(),
+		];
 	}
 
 	/**
@@ -112,5 +174,13 @@ class EntryValue implements HasValue, HasSlug, HasId
 	public function getFieldId(): string
 	{
 		return $this->getField()->getId();
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getFormId(): string
+	{
+		return $this->getForm()->getId();
 	}
 }
