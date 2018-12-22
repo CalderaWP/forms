@@ -5,6 +5,7 @@ namespace calderawp\caldera\Forms;
 
 use calderawp\caldera\Forms\Field\FieldConfig;
 use calderawp\caldera\Forms\Contracts\FieldModelContract;
+use calderawp\interop\Contracts\Interoperable;
 use calderawp\interop\Model;
 use calderawp\interop\Traits\CalderaForms\ProvidesField;
 use calderawp\interop\Traits\CalderaForms\ProvidesForm;
@@ -24,6 +25,15 @@ class FieldModel extends Model implements FieldModelContract
 	 */
 	protected $fieldConfig;
 
+
+	public static function fromArray(array $items): Interoperable
+	{
+		if (isset($items['fieldConfig']) && is_array($items['fieldConfig'])) {
+			$items['fieldConfig'] = FieldConfig::fromArray($items['fieldConfig']);
+		}
+
+		return parent::fromArray($items);
+	}
 
 	public function getFieldConfig(): FieldConfig
 	{

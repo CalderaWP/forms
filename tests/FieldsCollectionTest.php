@@ -35,6 +35,29 @@ class FieldsCollectionTest extends TestCase
 	}
 
 	/**
+	 * @covers \calderawp\caldera\Forms\FieldsCollection::hasField()
+	 */
+	public function testHasField()
+	{
+		$id = 'fld4';
+		$field = new FieldModel();
+		$field->setId($id);
+		$collection = new FieldsCollection();
+		$collection->addField($field);
+		$this->assertTrue($collection->hasField($id));
+		$id2 = 'fld32';
+		$slug2 = 'vroom_nom';
+		$field2 = new FieldModel();
+		$field2->setId($id2);
+		$field2->setSlug($slug2);
+		$this->assertEquals($slug2, $field2->getSlug());
+		$this->assertFalse($collection->hasField($id2));
+		$collection->addField($field2);
+		$this->assertTrue($collection->hasField($id2));
+		$this->assertTrue($collection->hasField($slug2));
+	}
+
+	/**
 	 * @covers \calderawp\caldera\Forms\FieldsCollection::fromArray()
 	 */
 	public function testFromArray()
@@ -44,6 +67,22 @@ class FieldsCollectionTest extends TestCase
 			'fields' => $fields,
 		]);
 		$this->assertAttributeEquals($fields, 'items', $collection);
+	}/**
+	 * @covers \calderawp\caldera\Forms\FieldsCollection::fromArray()
+	 */
+	public function testFromArrayWithFieldsAsArray()
+	{
+		$fieldId = 'fld1';
+		$fieldValue = 'fs';
+		$field = [
+			'id' => $fieldId,
+			'value' => $fieldValue,
+		];
+		$fieldsFromModel = [$field];
+		$collection = FieldsCollection::fromArray([
+			'fields' => $fieldsFromModel,
+		]);
+		$this->assertAttributeInstanceOf(FieldsCollection::class, 'items', $collection);
 	}
 
 	/**

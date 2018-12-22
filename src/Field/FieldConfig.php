@@ -34,6 +34,27 @@ class FieldConfig
 	}
 
 
+	public static function fromArray(array $items): FieldConfig
+	{
+		$obj = new static;
+		if (isset($items[ 'options' ])) {
+			if (! is_a($items[ 'options' ], FieldOptions::class)) {
+				foreach ($items['options'] as $optionIndex => $option) {
+					if (is_array($option)) {
+						$option = FieldOption::fromArray($option);
+					}
+					if (! is_a($option, FieldOption::class)) {
+						unset($items[$optionIndex]);
+					}
+				}
+			}
+
+			$obj->setOptions($items[ 'options' ]);
+		}
+
+		return $obj;
+	}
+
 	public function toArray() : array
 	{
 		$array = [];
