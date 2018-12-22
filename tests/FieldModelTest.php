@@ -56,7 +56,7 @@ class FieldModelTest extends TestCase
 		$this->assertEquals($id, $array['id' ]);
 		$this->assertEquals($default, $array['default' ]);
 		$this->assertEquals($value, $array['value' ]);
-		$this->assertEquals($form, $array['form' ]);
+		$this->assertEquals($form->toArray(), $array['form' ]);
 	}
 
 	/**

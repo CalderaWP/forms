@@ -38,16 +38,21 @@ class FormModelTest extends TestCase
 	public function testToArray()
 	{
 		$form = $this->getForm();
+		$form->shouldReceive('toArray')->andReturn([]);
+
 		$fields = $this->getFields();
+		$fields->shouldReceive('toArray')->andReturn([]);
 		$settings = $this->getSettings();
+		$settings->shouldReceive('toArray')->andReturn([]);
+
 		$model = FormModel::fromArray([
 			'form' => $form,
 			'fields' => $fields,
 			'settings' => $settings,
 		]);
 		$array = $model->toArray();
-		$this->assertEquals($form, $array[ 'form' ]);
-		$this->assertEquals($fields, $array[ 'fields' ]);
-		$this->assertEquals($settings, $array[ 'settings' ]);
+		$this->assertEquals([], $array[ 'form' ]);
+		$this->assertEquals([], $array[ 'fields' ]);
+		$this->assertEquals([], $array[ 'settings' ]);
 	}
 }

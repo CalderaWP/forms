@@ -100,8 +100,8 @@ class FieldsCollectionTest extends TestCase
 		$collection->addField($field1);
 		$collection->addField($field2);
 		$array = $collection->toArray();
-		$this->assertEquals($field1, $array[ $field1Id ]);
-		$this->assertEquals($field2, $array[ $field2Id ]);
+		$this->assertEquals($field1->toArray(), $array[ $field1Id ]);
+		$this->assertEquals($field2->toArray(), $array[ $field2Id ]);
 	}
 
 	/**
