@@ -3,7 +3,12 @@
 
 namespace calderawp\caldera\Forms\Controllers;
 
+use calderawp\caldera\Forms\Entry\EntryValue;
+use calderawp\caldera\Forms\Entry\EntryValues;
 use calderawp\caldera\Forms\Exception;
+use calderawp\caldera\Forms\FormModel;
+use calderawp\caldera\Forms\FormsCollection;
+use calderawp\caldera\Forms\Tests\EntryTest;
 use calderawp\caldera\restApi\Controller;
 use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 use calderawp\interop\Contracts\Rest\RestResponseContract as Response;
@@ -39,6 +44,42 @@ class EntryController extends CalderaFormsController
 		}
 	}
 
+	public function createEntry($entry, Request $request) : Entry
+	{
+		if (!is_null($entry)) {
+			return $entry;
+		}
+		try {
+			$formId = $request->getParam('formId');
+			try {
+				$forms = $this->calderaForms->findForm('id', $formId);
+				/** @var FormModel $form */
+				$form = $forms->getForm($formId);
+			} catch (Exception $e) {
+				throw $e;
+			}
+			$entry = new \calderawp\caldera\Forms\Entry\Entry();
+			$entry->setFormId($formId);
+			$entryValues = new EntryValues();
+			$fieldValues = $request->getParam('entryValues');
+			if (! empty($fieldValues)) {
+				foreach ($fieldValues as $fieldId => $fieldValue) {
+					$field = $form->getFields()->getField($fieldId);
+					if ($field) {
+						$entryValue = new EntryValue($form, $field);
+						$entryValue->setId($fieldId);
+						$entryValues->addValue($entryValue);
+					}
+				}
+			}
+			$entry->setEntryValues($entryValues);
+		} catch (Exception $e) {
+			throw $e;
+		}
+
+		return $entry;
+	}
+
 	/**
 	 * Convert request for a single entry result to response
 	 *
@@ -50,6 +91,7 @@ class EntryController extends CalderaFormsController
 	{
 		return $entry->toResponse();
 	}
+
 
 	/**
 	 * Handle request for collection of entries
