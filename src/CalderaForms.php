@@ -99,6 +99,7 @@ class CalderaForms extends Module implements CalderaFormsContract
 				return (new EntryCollection())
 					->addEntry($this->getEntries()->getEntry($searchValue));
 			}
+			throw new Exception('Entry not found', 404);
 		} elseif (in_array($by, [
 			'formId',
 			//'userId',

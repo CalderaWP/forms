@@ -12,22 +12,8 @@ use calderawp\caldera\restApi\Controller;
 use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 use calderawp\interop\Contracts\Rest\RestResponseContract as Response;
 
-class FormsController extends Controller
+class FormsController extends CalderaFormsController
 {
-	/**
-	 * @var CalderaForms;
-	 */
-	protected $calderaForms;
-
-	/**
-	 * FormsController constructor.
-	 *
-	 * @param CalderaForms $calderaForms
-	 */
-	public function __construct(CalderaForms$calderaForms)
-	{
-		$this->calderaForms = $calderaForms;
-	}
 
 	/**
 	 * Handle a request for a single form
@@ -128,13 +114,5 @@ class FormsController extends Controller
 			return true;
 		}
 		throw new Exception('Not Implemented', 501);
-	}
-
-	/**
-	 * @return CalderaForms
-	 */
-	private function getCalderaForms()
-	{
-		return $this->calderaForms;
 	}
 }
