@@ -3,6 +3,7 @@
 
 namespace calderawp\caldera\Forms\Tests;
 
+use calderawp\caldera\core\CalderaCore;
 use calderawp\caldera\Forms\CalderaForms;
 use calderawp\caldera\Forms\Entry\EntryValue;
 use calderawp\caldera\Forms\Field\FieldOption;
@@ -19,7 +20,12 @@ abstract class TestCase extends \Mockery\Adapter\Phpunit\MockeryTestCase
 
 	protected function calderaForms(): CalderaFormsContract
 	{
-		return new CalderaForms($this->serviceContainer());
+		return new CalderaForms($this->core(), $this->serviceContainer());
+	}
+
+	protected function core(): CalderaCore
+	{
+		return new CalderaCore($this->serviceContainer());
 	}
 
 	protected function serviceContainer(): Container
