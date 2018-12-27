@@ -45,10 +45,11 @@ class FormsController extends Controller
 			return $form;
 		}
 		try {
-			$form = $this
+			$id = $request->getParam('formId');
+			$forms = $this
 				->getCalderaForms()
-				->findForm('id', $request->getParam('formId'));
-			return $form;
+				->findForm('id', $id);
+			return $forms->getForm($id);
 		} catch (\Exception $e) {
 			throw $e;
 		}

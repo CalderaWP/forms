@@ -40,12 +40,9 @@ class FormsControllerTest extends TestCase
 
 		$calderaForms = $this->calderaForms();
 
-
 		$controller = new FormsController($calderaForms);
 		$request = new MockRequest();
 		$request->setParam('formId', ContactForm::ID);
-
-
 		$form = $controller->getForm(null, $request);
 		$this->assertEquals(ContactForm::ID, $form->getId());
 	}

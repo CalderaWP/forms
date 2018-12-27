@@ -11,7 +11,7 @@ use calderawp\caldera\Forms\Contracts\EntryContract;
 interface CalderaFormsContract extends CalderaModule
 {
 
-	public function findForm(string $by, $arg):FormModelContract;
+	public function findForm(string $by, $searchValue):FormsCollectionContract;
 	public function getForms():FormsCollectionContract;
 	public function findEntryBy(string $by, $searchValue) : EntryCollectionContract;
 

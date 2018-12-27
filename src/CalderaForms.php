@@ -42,14 +42,13 @@ class CalderaForms extends Module implements CalderaFormsContract
 	{
 	}
 
-	public function findForm(string $by, $arg): FormModelContract
+	public function findForm(string $by, $searchValue): FormsCollectionContract
 	{
+		$found = [];
 		if ('id' === $by) {
 			try {
-				$form = $this
-					->getForms()
-					->getForm($arg);
-				return $form;
+				$form = $this->findFormById($searchValue);
+				$found[] =  $form;
 			} catch (Exception $e) {
 				throw $e;
 			}
@@ -59,14 +58,23 @@ class CalderaForms extends Module implements CalderaFormsContract
 			switch ($by) {
 				case 'name':
 					foreach ($this->getForms()->toArray() as $form) {
-						if ($arg === $form[ 'name' ]) {
-							return $this->findForm('id', $form[ 'id' ]);
+						if ($searchValue === $form[ 'name' ]) {
+							$found[] = $form = $this->findFormById($form[ 'id' ]);
 						}
 					}
 			}
-			throw new Exception('Form not found', 404);
 		} else {
 		}
+		if (empty($found)) {
+			throw new Exception('Form not found', 404);
+		}
+
+		$collection = new FormsCollection();
+		foreach ($found as $form) {
+			$collection->addForm($form);
+		}
+
+		return $collection;
 	}
 
 	public function getForms(): FormsCollectionContract
@@ -106,19 +114,17 @@ class CalderaForms extends Module implements CalderaFormsContract
 							->getEntries()
 							->getEntry($entry[ 'id' ]);
 					}
-
 				}
 			}
-			if( empty( $found ) ){
+			if (empty($found)) {
 				throw new Exception('Entry not found', 404);
-			}else{
+			} else {
 				$collection = new EntryCollection();
-				foreach ($found as $entry ){
+				foreach ($found as $entry) {
 					$collection->addEntry($entry);
 				}
 				return $collection;
 			}
-
 		} else {
 			throw new Exception('Entry not found', 404);
 		}
@@ -132,5 +138,18 @@ class CalderaForms extends Module implements CalderaFormsContract
 		return $this
 			->getServiceContainer()
 			->make(EntryCollectionContract::class);
+	}
+
+	/**
+	 * @param $searchValue
+	 *
+	 * @return FormModelContract
+	 */
+	protected function findFormById($searchValue): FormModelContract
+	{
+		$form = $this
+			->getForms()
+			->getForm($searchValue);
+		return $form;
 	}
 }

@@ -47,7 +47,10 @@ class CalderaFormsTest extends TestCase
 	{
 		$calderaForms = $this->calderaForms();
 		$contactForm = new ContactForm();
-		$this->assertEquals($contactForm->getId(), $calderaForms->findForm('id', $contactForm->getId())->getId());
+		$forms = $calderaForms->findForm('id', $contactForm->getId())->toArray();
+		$form = $forms[$contactForm->getId()];
+		$this->assertEquals($contactForm->getId(), $form['id']);
+		$this->assertEquals($contactForm->getName(), $form['name']);
 	}
 	/**
 	 * @covers \calderawp\caldera\Forms\CalderaForms::findForm()
@@ -56,9 +59,21 @@ class CalderaFormsTest extends TestCase
 	{
 		$calderaForms = $this->calderaForms();
 		$contactForm = new ContactForm();
-		$this->assertEquals($contactForm->getId(), $calderaForms->findForm('name', $contactForm->getName())->getId());
+		$forms = $calderaForms->findForm('name', $contactForm->getName())->toArray();
+		$form = $forms[$contactForm->getId()];
+		$this->assertEquals($contactForm->getName(), $form['name']);
 	}
+	/**
+	 * @covers \calderawp\caldera\Forms\CalderaForms::findForm()
+	 */
+	public function testNotFindFormByName()
+	{
+		$this->expectException(Exception::class);
 
+		$calderaForms = $this->calderaForms();
+		$contactForm = new ContactForm();
+		$forms = $calderaForms->findForm('name', 'hats');
+	}
 	/**
 	 * @covers \calderawp\caldera\Forms\CalderaForms::findForm()
 	 */
@@ -91,19 +106,20 @@ class CalderaFormsTest extends TestCase
 	 * @covers \calderawp\caldera\Forms\CalderaForms::getEntries()
 	 * @covers \calderawp\caldera\Forms\EntryCollection::addEntry()
 	 */
-	public function testAddEntry(){
+	public function testAddEntry()
+	{
 		$calderaForms = $this->calderaForms();
 		$entry = Entry::fromArray(['id' => 5, 'formId' => 'cf1' ]);
 		$calderaForms
 			->getEntries()
 			->addEntry($entry);
-		$this->assertEquals(5,
+		$this->assertEquals(
+			5,
 			$calderaForms
 				->getEntries()
 				->getEntry(5)
 				->getId()
 		);
-
 	}
 
 	/**
