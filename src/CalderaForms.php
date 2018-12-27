@@ -16,12 +16,13 @@ use calderawp\caldera\Forms\Contracts\EntryContract;
 
 class CalderaForms extends Module implements CalderaFormsContract
 {
+	const IDENTIFIER  = 'calderaForms';
 	/**
 	 * @inheritDoc
 	 */
 	public function getIdentifier(): string
 	{
-		return 'calderaForms';
+		return self::IDENTIFIER;
 	}
 
 	public function registerServices(ServiceContainer $container): CalderaModule
