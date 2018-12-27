@@ -3,7 +3,7 @@
 
 namespace calderawp\caldera\Forms\Tests;
 
-use calderawp\caldera\core\CalderaCore;
+use calderawp\caldera\Core\CalderaCore;
 use calderawp\caldera\Forms\CalderaForms;
 use calderawp\caldera\Forms\Entry\EntryValue;
 use calderawp\caldera\Forms\Field\FieldOption;
