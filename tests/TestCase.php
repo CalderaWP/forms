@@ -9,11 +9,17 @@ use calderawp\caldera\Forms\Field\FieldOptions;
 use calderawp\caldera\Forms\FieldModel;
 use calderawp\caldera\Forms\FieldsCollection;
 use calderawp\caldera\Forms\FormModel;
+use calderawp\CalderaContainers\Service\Container;
 use PHPUnit\Framework\TestCase as _TestCase;
 
 abstract class TestCase extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
 
+
+	protected function serviceContainer():Container
+	{
+		return new Container();
+	}
 	protected function form($formId = null, array $data = []): FormModel
 	{
 		return FormModel::fromArray(array_merge(['id' => $formId], $data));

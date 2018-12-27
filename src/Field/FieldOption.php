@@ -42,6 +42,16 @@ class FieldOption implements CalderaFormsFieldOptionContract
 		];
 	}
 
+	/** @inheritdoc */
+	public function getId()
+	{
+		if (! $this->id) {
+			return str_replace(' ', '', strtolower(preg_replace("[^A-Za-z0-9 ]", "", $this->getLabel())));
+		}
+
+		return $this->id;
+	}
+
 	public function jsonSerialize()
 	{
 		return $this->toArray();
@@ -81,6 +91,10 @@ class FieldOption implements CalderaFormsFieldOptionContract
 						break;
 				}
 			}
+		}
+
+		if (empty($items['id'])) {
+			$obj->setId($obj->getId());
 		}
 
 		return $obj;

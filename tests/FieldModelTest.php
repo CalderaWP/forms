@@ -36,6 +36,7 @@ class FieldModelTest extends TestCase
 		$this->assertEquals($default, $field->getValue($default));
 		$field->setValue($value);
 		$this->assertEquals($value, $field->getValue($value));
+		$this->assertEquals($value, $field->toArray()['value']);
 	}
 
 	/**
@@ -132,5 +133,51 @@ class FieldModelTest extends TestCase
 		$arrayed = $field->toArray();
 		$this->assertArrayHasKey('fieldConfig', $arrayed);
 		$this->assertEquals($config->toArray(), $arrayed['fieldConfig']);
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::getType()
+	 * @covers \calderawp\caldera\Forms\FieldModel::setType()
+	 * @covers \calderawp\caldera\Forms\FieldModel::toArray()
+	 * @covers \calderawp\caldera\Forms\FieldModel::fromArray()
+	 */
+	public function testGetSetType()
+	{
+		$field = new FieldModel();
+		$this->assertEquals('text', $field->getType());
+		$field->setType('select');
+		$this->assertEquals('select', $field->getType());
+
+		$field = FieldModel::fromArray([
+			'type' => 'select'
+		]);
+		$this->assertEquals('select', $field->getType());
+		$this->assertEquals('select', $field->toArray()['type']);
+	}
+
+	public function testSetFieldConfigFromArray()
+	{
+		$options = [
+			[
+				'label' => 'Yes',
+				'value' => true
+			],
+			[
+				'label' => 'No',
+				'value' => false
+			]
+		];
+		/** @var FieldModel $field */
+		$field = FieldModel::fromArray([
+			'type' => 'select',
+			'fieldConfig' => [
+				'options' => $options
+			]
+		]);
+		$array = $field->toArray();
+		$this->assertEquals('select', $field->getType());
+		$this->assertEquals('select', $array['type']);
+		$this->assertCount(2, $field->getFieldConfig()->getOptions()->toArray());
+		$this->assertEquals('No', $field->getFieldConfig()->getOptions()->getOption('no')->getLabel());
 	}
 }

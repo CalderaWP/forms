@@ -14,4 +14,7 @@ use calderawp\interop\Contracts\CalderaForms\HasForm;
 interface FieldModelContract extends HasId, HasForm, HasField, HasValue, HasSlug, HasLabel, HasDescription
 {
 
+	public function getType(): string;
+
+	public function setType(string $type) : FieldModelContract;
 }

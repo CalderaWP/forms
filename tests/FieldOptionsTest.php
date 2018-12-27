@@ -53,6 +53,26 @@ class FieldOptionsTest extends TestCase
 		$this->assertAttributeEquals([$optTwo->getId() => $optTwo], 'items', $fieldOptions);
 	}
 
+	public function testAddMoreOptions()
+	{
+		$fieldOptions = new FieldOptions();
+		$optThree = FieldOption::fromArray([
+			'id' => 'opt3',
+			'value' => '3',
+			'label' => 'zr 3',
+			'calcValue' => 33,
+		]);
+
+		$optTwo = $this->optionTwo();
+		$fieldOptions->addOption($optThree);
+		$fieldOptions->addOption($this->optionOne());
+		$fieldOptions->addOption($optTwo);
+		$this->assertTrue($fieldOptions->hasOption($optTwo->getId()));
+		$this->assertTrue($fieldOptions->hasOption($optThree->getId()));
+		//$this->assertEquals('opt3', $fieldOptions->getOptions()['opt3']['id']);
+		$this->assertEquals($optThree->getId(), $fieldOptions->getOptions()['opt3']->getId());
+		$this->assertEquals($optThree->getLabel(), $fieldOptions->getOptions()['opt3']->toArray()['label']);
+	}
 	/**
 	 * @covers \calderawp\caldera\Forms\Field\FieldOptions::getOptions();
 	 * @covers \calderawp\caldera\Forms\Field\FieldOptions::addOption();

@@ -34,6 +34,17 @@ class FieldOptionTest extends TestCase
 		$this->assertEquals($id, $option->getId());
 	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\Field\FieldOption::getId()
+	 */
+	public function testIdFallback()
+	{
+		$option = new FieldOption();
+		$label = 'Hi Roy 2';
+		$option->setLabel($label);
+		$this->assertEquals('hiroy2', $option->getId());
+	}
+
 	public function testFromArray()
 	{
 		$id = 'op1';
@@ -70,5 +81,26 @@ class FieldOptionTest extends TestCase
 		$this->assertSame($value, $arrayed[ 'value' ]);
 		$this->assertSame($label, $arrayed[ 'label' ]);
 		$this->assertSame($calcValue, $arrayed[ 'calcValue' ]);
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Field\FieldOption::toArray();
+	 */
+	public function testToArrayNoId()
+	{
+
+		$value = 'Roy';
+		$label = 'Name 2';
+		$calcValue = 42;
+
+		$option = FieldOption::fromArray([
+			'value' => $value,
+			'label' => $label,
+			'calcValue' => $calcValue
+		]);
+		$expectId = 'name2';
+		$this->assertEquals($expectId, $option->getId());
+		$arrayed = $option->toArray();
+		$this->assertSame('name2', $arrayed[ 'id' ]);
 	}
 }

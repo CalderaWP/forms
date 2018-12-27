@@ -21,10 +21,25 @@ class FieldModel extends Model implements FieldModelContract
 	use ProvidesValue, ProvidesField, ProvidesForm, ProvidesIdToModel, ProvidesName, ProvidesSlug,ProvidesLabel, ProvidesDescription;
 
 	/**
+	 * @var string
+	 */
+	protected $type;
+
+
+	/**
 	 * @var FieldConfig
 	 */
 	protected $fieldConfig;
+	public function getType(): string
+	{
+		return is_string($this->type) ? $this->type : 'text';
+	}
 
+	public function setType(string $type): FieldModelContract
+	{
+		$this->type = $type;
+		return $this;
+	}
 
 	public static function fromArray(array $items): Interoperable
 	{
