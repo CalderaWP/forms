@@ -4,7 +4,9 @@ namespace calderawp\caldera\Forms\Tests\Controllers;
 
 use calderawp\caldera\Forms\CalderaForms;
 use calderawp\caldera\Forms\Controllers\FormsController;
+use calderawp\caldera\Forms\Exception;
 use calderawp\caldera\Forms\FormModel;
+use calderawp\caldera\Forms\Forms\ContactForm;
 use calderawp\caldera\Forms\FormsCollection;
 use calderawp\caldera\Forms\Tests\TestCase;
 use calderawp\interop\Tests\Mocks\MockRequest;
@@ -13,11 +15,14 @@ use calderawp\interop\Tests\Mocks\MockRestResponse;
 class FormsControllerTest extends TestCase
 {
 
+	/**
+	 * @covers \calderawp\caldera\Forms\Controllers\FormsController::responseToForm()
+	 */
 	public function testResponseToForm()
 	{
 
-		$container = $this->serviceContainer();
-		$calderaForms = new CalderaForms($container);
+		$calderaForms = $this->calderaForms();
+
 		$controller = new FormsController($calderaForms);
 		/** @var FormModel $form */
 		$form = \Mockery::mock('Form', FormModel::class);
@@ -27,75 +32,69 @@ class FormsControllerTest extends TestCase
 		$controller->responseToForm($form);
 		$this->addToAssertionCount(1);
 	}
-
+	/**
+	 * @covers \calderawp\caldera\Forms\Controllers\FormsController::getForm()
+	 */
 	public function testGetForm()
 	{
 
-		$container = $this->serviceContainer();
-		$calderaForms = new CalderaForms($container);
+		$calderaForms = $this->calderaForms();
 
-		$formId = 'cf1';
+
 		$controller = new FormsController($calderaForms);
 		$request = new MockRequest();
-		/** @var FormModel $form */
-		$form = \Mockery::mock('Form', FormModel::class);
+		$request->setParam('formId', ContactForm::ID);
 
-		$form->shouldReceive('fromArray')->andReturn([
-			'id' => $formId
-		]);
-		$response = new MockRestResponse();
-		$form->shouldReceive('responseToForm')->andReturn($response);
 
-		$controller->getForm($form, $request);
-		$this->addToAssertionCount(1);
+		$form = $controller->getForm(null, $request);
+		$this->assertEquals(ContactForm::ID, $form->getId());
 	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\Controllers\FormsController::getForm()
+	 */
 	public function testGetFormNotNull()
 	{
 		$form = $this->form('cf1');
-		$container = $this->serviceContainer();
-		$calderaForms = new CalderaForms($container);
+		$calderaForms = $this->calderaForms();
+
 
 		$controller = new FormsController($calderaForms);
 		$request = new MockRequest();
 		$this->assertSame($form, $controller->getForm($form, $request));
 	}
-	public function testGetCalderaForms()
-	{
-		$container = $this->serviceContainer();
-		$calderaForms = new CalderaForms($container);
-		$controller = new FormsController($calderaForms);
-		$this->assertEquals($calderaForms, $controller->getCalderaForms());
-	}
 
-
+	/**
+	 * @covers \calderawp\caldera\Forms\Controllers\FormsController::getCalderaForms()
+	 */
 	public function testCreateForm()
 	{
-		$form = $this->form('cf1');
-		$container = $this->serviceContainer();
-		$calderaForms = new CalderaForms($container);
-
+		$calderaForms = $this->calderaForms();
+		$this->expectException(Exception::class);
 		$controller = new FormsController($calderaForms);
-		$request = new MockRequest();
-		$this->assertSame($form, $controller->createForm($form, $request));
+		$controller->createForm(null, new MockRequest());
 	}
+
 
 	public function testGetForms()
 	{
-		$this->markTestSkipped('The mocks in all of these test make them meaningless');
 
-		/** @var FormsCollection $forms */
-		$forms = \Mockery::mock('Forms', FormsCollection::class);
-		$container = $this->serviceContainer();
-		$calderaForms = new CalderaForms($container);
-
+		$calderaForms = $this->calderaForms();
 		$controller = new FormsController($calderaForms);
 		$request = new MockRequest();
-		$this->assertSame($forms, $controller->getForms(null, $request));
+		$this->assertSame($calderaForms->getForms(), $controller->getForms(null, $request));
 	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\Controllers\FormsController::deleteForm()
+	 */
 	public function testDeleteForm()
 	{
-		$this->markTestSkipped('Must create DB package');
+		$calderaForms = $this->calderaForms();
+
+		$this->expectException(Exception::class);
+
+		$controller = new FormsController($calderaForms);
+		$controller->deleteForm(null, new MockRequest());
 	}
 }

@@ -20,12 +20,13 @@ class ContactForm extends FormModel
 	const EMAIL = 'email';
 	const CONSENT = 'consent';
 	const SUBMIT = 'submitButton';
+	const ID = 'contact-form';
 
 	public function __construct()
 	{
 		$this->setupFields();
 		$this->setName('Contact Form');
-		$this->setId('contact-form');
+		$this->setId(self::ID);
 	}
 
 
