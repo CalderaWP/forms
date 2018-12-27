@@ -3,6 +3,7 @@
 
 namespace calderawp\caldera\Forms\Tests;
 
+use calderawp\caldera\Forms\CalderaForms;
 use calderawp\caldera\Forms\Entry\EntryValue;
 use calderawp\caldera\Forms\Field\FieldOption;
 use calderawp\caldera\Forms\Field\FieldOptions;
@@ -11,15 +12,21 @@ use calderawp\caldera\Forms\FieldsCollection;
 use calderawp\caldera\Forms\FormModel;
 use calderawp\CalderaContainers\Service\Container;
 use PHPUnit\Framework\TestCase as _TestCase;
+use calderawp\caldera\Forms\Contracts\CalderaFormsContract;
 
 abstract class TestCase extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
 
+	protected function calderaForms(): CalderaFormsContract
+	{
+		return new CalderaForms($this->serviceContainer());
+	}
 
-	protected function serviceContainer():Container
+	protected function serviceContainer(): Container
 	{
 		return new Container();
 	}
+
 	protected function form($formId = null, array $data = []): FormModel
 	{
 		return FormModel::fromArray(array_merge(['id' => $formId], $data));

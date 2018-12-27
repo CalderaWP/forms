@@ -24,8 +24,8 @@ class ContactForm extends FormModel
 	public function __construct()
 	{
 		$this->setupFields();
-		$this->setName('Contact Form' );
-		$this->setId( 'contact-form' );
+		$this->setName('Contact Form');
+		$this->setId('contact-form');
 	}
 
 

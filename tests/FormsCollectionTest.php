@@ -2,6 +2,7 @@
 
 namespace calderawp\caldera\Forms\Tests;
 
+use calderawp\caldera\Forms\Exception;
 use calderawp\caldera\Forms\FormModel;
 use calderawp\caldera\Forms\FormsCollection;
 use calderawp\interop\Tests\Traits\EntityFactory;
@@ -70,5 +71,33 @@ class FormsCollectionTest extends TestCase
 		$collection = new FormsCollection();
 		$collection->addForm($form);
 		$this->assertEquals([$form->getId() => $form], $collection->getForms());
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\FormsCollection::getForm()
+	 */
+	public function testGetForm()
+	{
+		$id = 'cf1';
+		$form = new FormModel();
+		$form->setId($id);
+		$collection = new FormsCollection();
+		$collection->addForm($form);
+		$this->assertEquals($form, $collection->getForm($id));
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\FormsCollection::getForm()
+	 */
+	public function testGetFormNotFound()
+	{
+		$this->expectException(Exception::class);
+
+		$id = 'cf1';
+		$form = new FormModel();
+		$form->setId($id);
+		$collection = new FormsCollection();
+		$collection->addForm($form);
+		 $collection->getForm('cf2');
 	}
 }
