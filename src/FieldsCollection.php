@@ -21,9 +21,12 @@ class FieldsCollection extends Collection implements FieldCollectionInterface
 	{
 		$items = self::prepareFieldsFromArray($items);
 
+		/** @var FieldsCollection $obj */
 		$obj = parent::fromArray($items);
 		if (isset($items['fields'])&&is_object($items['fields'])) {
-			$obj->setFields($items['fields']);
+			if (is_array($items['fields'])) {
+				exit;
+			}
 		}
 		return $obj;
 	}
