@@ -4,6 +4,8 @@ namespace calderawp\caldera\Forms\Tests;
 
 use calderawp\caldera\Forms\CalderaForms;
 use calderawp\caldera\Forms\Contracts\FormsCollectionContract;
+use calderawp\caldera\Forms\Contracts\EntryCollectionContract;
+use calderawp\caldera\Forms\Entry\Entry;
 use calderawp\caldera\Forms\Exception;
 use calderawp\caldera\Forms\Forms\ContactForm;
 
@@ -16,6 +18,7 @@ class CalderaFormsTest extends TestCase
 	{
 		$calderaForms = $this->calderaForms();
 		$this->assertInstanceOf(FormsCollectionContract::class, $calderaForms->getForms());
+		$this->assertInstanceOf(EntryCollectionContract::class, $calderaForms->getEntries());
 	}
 	/**
 	 * @covers \calderawp\caldera\Forms\CalderaForms::getForms()
@@ -28,10 +31,7 @@ class CalderaFormsTest extends TestCase
 		$this->assertCount(1, $calderaForms->getForms()->toArray());
 	}
 
-	public function testGetEntryBy()
-	{
-		$this->markTestSkipped('Not implemented yet');
-	}
+
 
 	/**
 	 * @covers \calderawp\caldera\Forms\CalderaForms::getIdentifier()
@@ -75,5 +75,76 @@ class CalderaFormsTest extends TestCase
 	public function testGetFormsDb()
 	{
 		$this->markTestSkipped('Not implemented yet');
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\CalderaForms::getEntries()
+	 * @covers \calderawp\caldera\Forms\CalderaForms::registerServices()
+	 */
+	public function testGetEntries()
+	{
+		$calderaForms = $this->calderaForms();
+		$this->assertInstanceOf(EntryCollectionContract::class, $calderaForms->getEntries());
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\CalderaForms::getEntries()
+	 * @covers \calderawp\caldera\Forms\EntryCollection::addEntry()
+	 */
+	public function testAddEntry(){
+		$calderaForms = $this->calderaForms();
+		$entry = Entry::fromArray(['id' => 5, 'formId' => 'cf1' ]);
+		$calderaForms
+			->getEntries()
+			->addEntry($entry);
+		$this->assertEquals(5,
+			$calderaForms
+				->getEntries()
+				->getEntry(5)
+				->getId()
+		);
+
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\CalderaForms::getEntries()
+	 * @covers \calderawp\caldera\Forms\EntryCollection::findEntryBy()
+	 */
+	public function testGetEntryByEntryIdId()
+	{
+		$calderaForms = $this->calderaForms();
+		$formId = 'cf1';
+		$formId2 = 'cf2';
+		$entry = Entry::fromArray(['id' => 5, 'formId' => 'cf1' ]);
+		$entry2FromForm = Entry::fromArray(['id' => 7, 'formId' => 'cf1' ]);
+		$entryNotFromThisForm = Entry::fromArray(['id' => 6, 'formId' => $formId2 ]);
+		$calderaForms
+			->getEntries()
+			->addEntry($entry2FromForm)
+			->addEntry($entryNotFromThisForm)
+			->addEntry($entry);
+
+		$this->assertCount(1, $calderaForms->findEntryBy('id', 7)->toArray());
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\CalderaForms::getEntries()
+	 * @covers \calderawp\caldera\Forms\EntryCollection::findEntryBy()
+	 */
+	public function testGetEntryByFormId()
+	{
+		$calderaForms = $this->calderaForms();
+		$formId = 'cf1';
+		$formId2 = 'cf2';
+		$entry = Entry::fromArray(['id' => 5, 'formId' => 'cf1' ]);
+		$entry2FromForm = Entry::fromArray(['id' => 7, 'formId' => 'cf1' ]);
+		$entryNotFromThisForm = Entry::fromArray(['id' => 6, 'formId' => $formId2 ]);
+		$calderaForms
+			->getEntries()
+			->addEntry($entry2FromForm)
+			->addEntry($entryNotFromThisForm)
+			->addEntry($entry);
+
+		$this->assertCount(2, $calderaForms->findEntryBy('formId', $formId)->toArray());
 	}
 }

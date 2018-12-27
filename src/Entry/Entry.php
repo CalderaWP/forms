@@ -4,11 +4,27 @@
 namespace calderawp\caldera\Forms\Entry;
 
 use calderawp\caldera\Forms\Contracts\EntryContract;
+use calderawp\caldera\Forms\FormModel;
+use calderawp\caldera\restApi\Response;
+use calderawp\interop\Contracts\Rest\RestRequestContract;
+use calderawp\interop\Contracts\Rest\RestResponseContract;
 use calderawp\interop\Traits\ProvidesIdGeneric;
+use calderawp\interop\Contracts\Interoperable;
 
 class Entry implements EntryContract
 {
 	use ProvidesIdGeneric;
+
+
+	/**
+	 * @inheritDoc
+	 */
+	public function toResponse(): RestResponseContract
+	{
+
+		return (new Response())->setData($this->toArray());
+	}
+
 
 	/**
 	 * @var \DateTime
@@ -26,7 +42,7 @@ class Entry implements EntryContract
 
 	const DATE_FORMAT = 'Y-m-d H:i:s';
 
-	public function setEntryValues(EntryValues$entryValues) : Entry
+	public function setEntryValues(EntryValues $entryValues): Entry
 	{
 		$this->entryValues = $entryValues;
 		return $this;
@@ -47,21 +63,22 @@ class Entry implements EntryContract
 			//?
 		}
 	}
+
 	public static function fromArray(array $items): EntryContract
 	{
 		$obj = new static;
 
 		foreach ([
-			'id' => 'setId',
-			'formId' => 'setFormId',
-			'date' => 'setDate',
-			'entryValues' => 'setEntryValuesFromArray',
+					 'id' => 'setId',
+					 'formId' => 'setFormId',
+					 'date' => 'setDate',
+					 'entryValues' => 'setEntryValuesFromArray',
 				 ] as $key => $setter) {
-			if (! empty($items[$key])) {
+			if (!empty($items[ $key ])) {
 				try {
 					call_user_func([$obj, $setter], $items[ $key ]);
 				} catch (\Exception $e) {
-					//@todo forward exception
+					throw $e;
 				}
 			}
 		}
@@ -76,7 +93,7 @@ class Entry implements EntryContract
 			'id' => $this->getId(),
 			'formId' => $this->getFormId(),
 			'date' => $this->getDate()->format('Y-m-d H:i:s'),
-			'entryValues' => $this->getEntryValues()->toArray()
+			'entryValues' => $this->getEntryValues()->toArray(),
 		];
 
 		return $array;
@@ -92,6 +109,7 @@ class Entry implements EntryContract
 
 	/**
 	 * @param string $formId
+	 *
 	 * @return $this
 	 */
 	public function setFormId(string $formId): EntryContract
@@ -106,9 +124,9 @@ class Entry implements EntryContract
 		return $this->toArray();
 	}
 
-	public function getEntryValues():EntryValues
+	public function getEntryValues(): EntryValues
 	{
-		if (! $this->entryValues) {
+		if (!$this->entryValues) {
 			$this->entryValues = new EntryValues();
 		}
 
@@ -126,14 +144,17 @@ class Entry implements EntryContract
 
 	/**
 	 * @param string|\DateTime $date
+	 *
 	 * @return  $this
 	 */
 	public function setDate($date): EntryContract
 	{
-		if (is_string($date)) {
+		if (is_string($date) && !empty($date)) {
 			$this->date = new \DateTime($date);
-		} else {
+		} elseif (is_object($date)) {
 			$this->date = $date;
+		} else {
+			$this->date = new \DateTime();
 		}
 		return $this;
 	}

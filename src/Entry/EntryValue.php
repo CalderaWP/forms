@@ -70,19 +70,18 @@ class EntryValue implements HasValue, HasSlug, HasId
 
 		$obj = new static($form, $field);
 		foreach ([
-				'id' => 'setId',
+					 'id' => 'setId',
 					 'slug' => 'setSlug',
-					 'value' => 'setValue'
+					 'value' => 'setValue',
 				 ] as $key => $setter) {
-			if (! empty($items[$key])) {
+			if (!empty($items[ $key ])) {
 				try {
 					call_user_func([$obj, $setter], $items[ $key ]);
 				} catch (\Exception $e) {
-					//@todo forward exception
+					throw $e;
 				}
 			}
 		}
-
 
 
 		return $obj;

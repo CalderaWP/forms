@@ -5,6 +5,8 @@ namespace calderawp\caldera\Forms\Tests;
 use calderawp\caldera\Forms\Entry\Entry;
 use calderawp\caldera\Forms\Entry\EntryValue;
 use calderawp\caldera\Forms\Entry\EntryValues;
+use calderawp\caldera\Forms\FormModel;
+use calderawp\interop\Tests\Mocks\MockRequest;
 
 class EntryTest extends TestCase
 {
@@ -74,6 +76,36 @@ class EntryTest extends TestCase
 		$this->assertEquals($formId, $array[ 'formId' ]);
 		$this->assertEquals($date->format(Entry::DATE_FORMAT), $array[ 'date' ]);
 		$this->assertEquals(2, count($array[ 'entryValues' ]));
+	}
+
+
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Entry\Entry::toResponse()
+	 */
+	public function testToResponse()
+	{
+		$formId = 'cf1';
+		$form = new FormModel();
+		$form->setId($formId);
+		$fieldId1 = 'f1';
+		$fieldId2 = 'f12';
+		$entryId1 = 11 + rand(2, 8);
+		$entryId2 = 22 + rand(10, 20);
+		$field = $this->field($fieldId1, [], $form);
+		$field2 = $this->field($fieldId2, [], $form);
+		$entryValue = (new EntryValue($form, $field))->setId($entryId1);
+		$entryValue2 = (new EntryValue($form, $field2))->setId($entryId2);
+		$entryValues = (new EntryValues())->addValue($entryValue)->addValue($entryValue2);
+		$date = new \DateTimeImmutable(date(Entry::DATE_FORMAT, time()));
+		$entryId = 1;
+		$entry = (new Entry())
+			->setEntryValues($entryValues)
+			->setDate($date)
+			->setFormId($formId)
+			->setId($entryId);
+		$response = $entry->toResponse();
+		$this->assertEquals($entryId, $response->getData()['id']);
 	}
 
 

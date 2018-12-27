@@ -4,10 +4,11 @@
 namespace calderawp\caldera\Forms\Contracts;
 
 use calderawp\caldera\Forms\Entry\EntryValues;
+use calderawp\interop\Contracts\ConvertsToResponse;
 use calderawp\interop\Contracts\HasId;
 use calderawp\interop\Contracts\Arrayable;
 
-interface EntryContract extends HasId, Arrayable
+interface EntryContract extends HasId, Arrayable, ConvertsToResponse
 {
 
 	/**

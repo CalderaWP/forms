@@ -18,9 +18,11 @@ class EntryValues implements CollectsEntryValues, Arrayable
 	public function toArray(): array
 	{
 		$array = [];
-		/** @var EntryValue $item */
-		foreach ($this->items as $item) {
-			$array[ $item->getId() ] = $item->toArray();
+		if (! empty( $this->items)) {
+			/** @var EntryValue $item */
+			foreach ($this->items as $item) {
+				$array[ $item->getId() ] = $item->toArray();
+			}
 		}
 		return $array;
 	}

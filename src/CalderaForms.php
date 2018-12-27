@@ -11,6 +11,8 @@ use calderawp\caldera\Db\Contracts\FormsDb;
 use calderawp\caldera\Forms\Contracts\CalderaFormsContract;
 use calderawp\caldera\Forms\Contracts\FormsCollectionContract;
 use calderawp\caldera\Forms\Contracts\FormModelContract;
+use calderawp\caldera\Forms\Contracts\EntryCollectionContract;
+use calderawp\caldera\Forms\Contracts\EntryContract;
 
 class CalderaForms extends Module implements CalderaFormsContract
 {
@@ -22,10 +24,14 @@ class CalderaForms extends Module implements CalderaFormsContract
 		return 'calderaForms';
 	}
 
-	public function registerServices(ServiceContainer$container): CalderaModule
+	public function registerServices(ServiceContainer $container): CalderaModule
 	{
 		$container->singleton(FormsCollectionContract::class, function () {
 			return (new FormsCollection())->addForm(new ContactForm());
+		});
+
+		$container->singleton(EntryCollectionContract::class, function () {
+			return (new EntryCollection());
 		});
 
 		return $this;
@@ -36,7 +42,7 @@ class CalderaForms extends Module implements CalderaFormsContract
 	{
 	}
 
-	public function findForm(string $by, $arg) :FormModelContract
+	public function findForm(string $by, $arg): FormModelContract
 	{
 		if ('id' === $by) {
 			try {
@@ -53,8 +59,8 @@ class CalderaForms extends Module implements CalderaFormsContract
 			switch ($by) {
 				case 'name':
 					foreach ($this->getForms()->toArray() as $form) {
-						if ($arg === $form['name']) {
-							return $this->findForm('id', $form['id']);
+						if ($arg === $form[ 'name' ]) {
+							return $this->findForm('id', $form[ 'id' ]);
 						}
 					}
 			}
@@ -63,23 +69,68 @@ class CalderaForms extends Module implements CalderaFormsContract
 		}
 	}
 
-	public function getForms():FormsCollectionContract
+	public function getForms(): FormsCollectionContract
 	{
 		return $this
 			->getServiceContainer()
 			->make(FormsCollectionContract::class);
 	}
 
-	public function getEntryBy(string $by, $arg)
+
+	/**
+	 * @param string $by
+	 * @param $searchValue
+	 *
+	 * @return EntryCollectionContract
+	 * @throws Exception
+	 */
+	public function findEntryBy(string $by, $searchValue): EntryCollectionContract
 	{
 		if ('id' === $by) {
+			if ($this->getEntries()->hasEntry($searchValue)) {
+				return (new EntryCollection())
+					->addEntry($this->getEntries()->getEntry($searchValue));
+			}
 		} elseif (in_array($by, [
 			'formId',
-			'userId',
-			'primaryEmail',
-			'fieldValue'
+			//'userId',
+			//'primaryEmail',
+			//'fieldValue'
 		])) {
+			$entries = $this->getEntries()->toArray();
+			$found = [];
+			if (!empty($entries)) {
+				foreach ($entries as $entry) {
+					if ($searchValue === $entry[ 'formId' ]) {
+						$found[] = $this
+							->getEntries()
+							->getEntry($entry[ 'id' ]);
+					}
+
+				}
+			}
+			if( empty( $found ) ){
+				throw new Exception('Entry not found', 404);
+			}else{
+				$collection = new EntryCollection();
+				foreach ($found as $entry ){
+					$collection->addEntry($entry);
+				}
+				return $collection;
+			}
+
 		} else {
+			throw new Exception('Entry not found', 404);
 		}
+	}
+
+	/**
+	 * @return EntryCollectionContract
+	 */
+	public function getEntries(): EntryCollectionContract
+	{
+		return $this
+			->getServiceContainer()
+			->make(EntryCollectionContract::class);
 	}
 }
