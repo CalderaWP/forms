@@ -4,6 +4,7 @@
 namespace calderawp\caldera\Forms\Entry;
 
 use calderawp\caldera\Forms\Contracts\EntryContract;
+use calderawp\caldera\Forms\EntryCollection;
 use calderawp\caldera\Forms\FormModel;
 use calderawp\caldera\restApi\Response;
 use calderawp\interop\Contracts\Rest\RestRequestContract;
@@ -16,15 +17,7 @@ class Entry implements EntryContract
 	use ProvidesIdGeneric;
 
 
-	/**
-	 * @inheritDoc
-	 */
-	public function toResponse(): RestResponseContract
-	{
-
-		return (new Response())->setData($this->toArray());
-	}
-
+	protected $userId;
 
 	/**
 	 * @var \DateTime
@@ -49,6 +42,14 @@ class Entry implements EntryContract
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function toResponse(): RestResponseContract
+	{
+		return (new Response())->setData($this->toArray());
+	}
+
+	/**
 	 * @param array|EntryValues $entryValues
 	 *
 	 * @return Entry
@@ -62,6 +63,23 @@ class Entry implements EntryContract
 		} else {
 			//?
 		}
+	}
+
+	/**
+	 * Convert array of database results to Entry model
+	 *
+	 * @param array $result
+	 *
+	 * @return Entry
+	 */
+	public static function fromDatabaseResult(array $result) : Entry
+	{
+		$obj = new static();
+		$obj->setFormId($result['form_id'])
+			->setUserId($result['user_id'])
+			->setDate($result['datestamp'])
+			->setId($result['id']);
+			return$obj;
 	}
 
 	public static function fromArray(array $items): EntryContract
@@ -92,7 +110,8 @@ class Entry implements EntryContract
 		$array = [
 			'id' => $this->getId(),
 			'formId' => $this->getFormId(),
-			'date' => $this->getDate()->format('Y-m-d H:i:s'),
+			'date' => $this->getDateAsString(),
+			'userId' => $this->getUserId(),
 			'entryValues' => $this->getEntryValues()->toArray(),
 		];
 
@@ -118,6 +137,26 @@ class Entry implements EntryContract
 		return $this;
 	}
 
+	/**
+	 * @return int|string
+	 */
+	public function getUserId() : int
+	{
+		return is_numeric($this->userId)? $this->userId :0;
+	}
+
+	/**
+	 * @param int $userId
+	 *
+	 * @return Entry
+	 */
+	public function setUserId(int $userId) : Entry
+	{
+		$this->userId = $userId;
+		return $this;
+	}
+
+
 
 	public function jsonSerialize()
 	{
@@ -133,6 +172,13 @@ class Entry implements EntryContract
 		return $this->entryValues;
 	}
 
+	public function addEntryValue( EntryValue $value ): EntryContract
+	{
+		$this
+			->getEntryValues()
+			->addValue($value);
+		return $this;
+	}
 
 	/**
 	 * @return \DateTime
@@ -157,5 +203,25 @@ class Entry implements EntryContract
 			$this->date = new \DateTime();
 		}
 		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDateAsString(): string
+	{
+		return $this->getDate()->format('Y-m-d H:i:s');
+	}
+
+	public function valuesToArray() : array
+	{
+		$values = [];
+
+		/** @var EntryValue $value */
+		foreach ( $this->entryValues as $value ){
+
+			$values[$value->getFieldId()]= $value->getValue();
+		}
+		return $values;
 	}
 }

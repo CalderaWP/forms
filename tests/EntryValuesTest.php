@@ -109,4 +109,41 @@ class EntryValuesTest extends TestCase
 
 		$this->assertCount(2, $values->getValues());
 	}
+
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Entry\EntryValues::getIterator();
+	 */
+	public function testItteration(){
+		$formId = 'cf1';
+		$form = $this->form($formId);
+		$fieldId1 = 'f1';
+		$fieldId2 = 'f12';
+		$entryId1 = 11 + rand(2, 8);
+		$entryId2 = 22 + rand(10, 20);
+		$field = $this->field($fieldId1, [], $form);
+		$field2 = $this->field($fieldId2, [], $form);
+		$entryValue = (new EntryValue($form, $field))->setId($entryId1);
+		$entryValue2 = (new EntryValue($form, $field2))->setId($entryId2);
+
+		$this->assertEquals($entryId1, $entryValue->getId());
+		$this->assertEquals($entryId2, $entryValue2->getId());
+
+
+		$values = EntryValues::fromArray([
+			$entryValue,
+			$entryValue2
+		]);
+
+		$calls = 0;
+		foreach ($values as $value ){
+			$this->assertTrue(in_array( $value->getId(), [
+				$entryId1,
+				$entryId2
+			]));
+			$calls++;
+
+		}
+		$this->assertSame(2,$calls);
+	}
 }

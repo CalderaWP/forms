@@ -87,11 +87,6 @@ class CalderaFormsTest extends TestCase
 		$calderaForms->findForm('name', 'rand');
 	}
 
-	public function testGetFormsDb()
-	{
-		$this->markTestSkipped('Not implemented yet');
-	}
-
 	/**
 	 * @covers \calderawp\caldera\Forms\CalderaForms::getEntries()
 	 * @covers \calderawp\caldera\Forms\CalderaForms::registerServices()
@@ -162,5 +157,16 @@ class CalderaFormsTest extends TestCase
 			->addEntry($entry);
 
 		$this->assertCount(2, $calderaForms->findEntryBy('formId', $formId)->toArray());
+	}
+	/**
+	 * @covers \calderawp\caldera\Forms\CalderaForms::getPrimaryDataSource()
+	 * @covers \calderawp\caldera\Forms\CalderaForms::setPrimaryDataSource()
+	 */
+	public function testSetGetPrimarySource()
+	{
+		$calderaForms = $this->calderaForms();
+		$sources = \Mockery::mock('Source', \calderawp\caldera\Forms\Contracts\DataSourcesContract::class);
+		$calderaForms->setPrimaryDataSource($sources);
+		$this->assertSame($sources, $calderaForms->getPrimaryDataSource());
 	}
 }

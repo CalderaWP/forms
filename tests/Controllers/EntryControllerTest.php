@@ -96,7 +96,9 @@ class EntryControllerTest extends TestCase
 		$controller = new EntryController($calderaForms);
 		$this->assertEquals($entry->toArray(), $controller->entryToResponse($entry)->getData());
 	}
-
+	/**
+	 * @covers \calderawp\caldera\Forms\Controllers\EntryController::createEntry()
+	 */
 	public function testCreateEntry()
 	{
 		$calderaForms = $this->calderaForms();
@@ -125,7 +127,12 @@ class EntryControllerTest extends TestCase
 		$calderaForms
 			->getForms()
 			->addForm($form);
-		$this->assertEquals($form, $calderaForms->findForm('id', $formId)->getForm($formId));
+		$this->assertEquals(
+			$form,
+			$calderaForms
+			->findForm('id', $formId)
+			->getForm($formId)
+		);
 
 
 		$controller = new EntryController($calderaForms);
@@ -133,5 +140,45 @@ class EntryControllerTest extends TestCase
 		$this->assertInstanceOf(EntryValues::class, $createdEntry->getEntryValues());
 		$this->assertTrue($createdEntry->getEntryValues()->hasValue($fieldId1));
 		$this->assertTrue($createdEntry->getEntryValues()->hasValue($fieldId2));
+		$this->assertSame(
+			$field1Value,
+			$createdEntry->getEntryValues()->getValue($fieldId1)->getValue()
+		);
+		$this->assertSame(
+			$field2Value,
+			$createdEntry->getEntryValues()->getValue($fieldId2)->getValue()
+		);
 	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Controllers\EntryController::createEntry()
+	 * @covers \calderawp\caldera\Forms\Controllers\EntryController::getEntry()
+	 * @covers \calderawp\caldera\Forms\Controllers\EntryController::getEntries()
+	 * @covers \calderawp\caldera\Forms\Controllers\CalderaFormsController::applyFilters()
+	 * @covers \calderawp\caldera\Forms\Controllers\CalderaFormsController::addFilter()
+	 */
+	public function testFilters()
+	{
+		$expectedEntry = \Mockery::mock('Entry', Entry::class );
+		$expectedEntry2 = \Mockery::mock('Entry', Entry::class );
+		$expectedEntries = \Mockery::mock('Entries', \calderawp\caldera\Forms\Contracts\EntryCollectionContract::class);
+		$value = null;
+		$calderaForms = $this->calderaForms();
+		$controller = new EntryController($calderaForms);
+
+		$controller->addFilter("caldera/forms/createEntry", function () use ($expectedEntry) {
+			return $expectedEntry;
+		});
+		$this->assertSame($expectedEntry, $controller->createEntry(null, new MockRequest()));
+		$controller->addFilter("caldera/forms/getEntry", function ($value) use ($expectedEntry2) {
+			return $expectedEntry2;
+		});
+		$this->assertSame($expectedEntry2, $controller->getEntry(null, new MockRequest()));
+		$controller->addFilter("caldera/forms/getEntries", function () use ($expectedEntries) {
+			return $expectedEntries;
+		});
+		$this->assertSame($expectedEntries, $controller->getEntries(null, new MockRequest()));
+
+	}
+
 }

@@ -71,4 +71,24 @@ class FieldConfigTest extends TestCase
 		$fieldConfig = FieldConfig::fromArray($fieldArray);
 		$this->assertEquals('email', $fieldConfig->getOtherConfigOption('html5type'));
 	}
+	/**
+	 * @covers \calderawp\caldera\Forms\Field\FieldConfig::setOtherConfigOption()
+	 * @covers \calderawp\caldera\Forms\Field\FieldConfig::getOtherConfigOption()
+	 * @covers \calderawp\caldera\Forms\Field\FieldConfig::isValidOtherConfigOption()
+	 */
+	public function testAllowsAttributes(){
+		$fieldArray = [
+			'attributes' => [
+				'min' => 5,
+				'max' => 12
+			],
+		];
+
+		$fieldConfig = FieldConfig::fromArray($fieldArray);
+		$this->assertEquals([
+			'min' => 5,
+			'max' => 12
+		], $fieldConfig->getOtherConfigOption('attributes'));
+	}
+
 }

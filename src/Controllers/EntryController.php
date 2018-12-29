@@ -30,9 +30,11 @@ class EntryController extends CalderaFormsController
 	 */
 	public function getEntry($entry, Request $request): Entry
 	{
-		if (!is_null($entry)) {
+		$entry = $this->applyBeforeFilter(__FUNCTION__,$entry,$request);
+		if (is_a($entry,Entry::class)) {
 			return $entry;
 		}
+
 		try {
 			$id = $request->getParam('id');
 			$entries = $this
@@ -44,11 +46,23 @@ class EntryController extends CalderaFormsController
 		}
 	}
 
-	public function createEntry($entry, Request $request) : Entry
+	/**
+	 * Handle requests to create an entry
+	 *
+	 * @param Entry|null $entry
+	 * @param Request $request
+	 *
+	 * @return Entry
+	 * @throws Exception
+	 * @throws \calderawp\interop\Exception
+	 */
+	public function createEntry(?Entry $entry, Request $request) : Entry
 	{
-		if (!is_null($entry)) {
+		$entry = $this->applyBeforeFilter(__FUNCTION__,$entry,$request);
+		if (is_a($entry,Entry::class)) {
 			return $entry;
 		}
+
 		try {
 			$formId = $request->getParam('formId');
 			try {
@@ -60,19 +74,7 @@ class EntryController extends CalderaFormsController
 			}
 			$entry = new \calderawp\caldera\Forms\Entry\Entry();
 			$entry->setFormId($formId);
-			$entryValues = new EntryValues();
-			$fieldValues = $request->getParam('entryValues');
-			if (! empty($fieldValues)) {
-				foreach ($fieldValues as $fieldId => $fieldValue) {
-					$field = $form->getFields()->getField($fieldId);
-					if ($field) {
-						$entryValue = new EntryValue($form, $field);
-						$entryValue->setId($fieldId);
-						$entryValues->addValue($entryValue);
-					}
-				}
-			}
-			$entry->setEntryValues($entryValues);
+			$this->addEntryValues($entry, $request, $form);
 		} catch (Exception $e) {
 			throw $e;
 		}
@@ -103,7 +105,8 @@ class EntryController extends CalderaFormsController
 	 */
 	public function getEntries($entries, Request $request): Entries
 	{
-		if (!is_null($entries)) {
+		$entries = $this->applyBeforeFilter(__FUNCTION__,$entries,$request);
+		if (is_a($entries,Entries::class)) {
 			return $entries;
 		}
 
@@ -123,4 +126,6 @@ class EntryController extends CalderaFormsController
 	{
 		return $entries->toResponse();
 	}
+
+
 }

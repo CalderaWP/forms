@@ -14,6 +14,7 @@ class FieldConfig
 	protected $otherConfigOptions = [
 		'buttonType' => 'submit',
 		'html5type' => 'text',
+		'attributes' => []
 	];
 
 

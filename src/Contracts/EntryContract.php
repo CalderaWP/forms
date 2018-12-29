@@ -3,6 +3,7 @@
 
 namespace calderawp\caldera\Forms\Contracts;
 
+use calderawp\caldera\Forms\Entry\EntryValue;
 use calderawp\caldera\Forms\Entry\EntryValues;
 use calderawp\interop\Contracts\ConvertsToResponse;
 use calderawp\interop\Contracts\HasId;
@@ -24,13 +25,15 @@ interface EntryContract extends HasId, Arrayable, ConvertsToResponse
 	public function getFormId(): string;
 
 	/**
-	 * @param string $formId
+	 * @param string $formId	public function addEntryValue( EntryValue $value ): EntryContract
+
 	 *
 	 * @return $this
 	 */
 	public function setFormId(string $formId): EntryContract;
 
 	public function getEntryValues(): EntryValues;
+	public function addEntryValue( EntryValue $value ): EntryContract;
 
 	/**
 	 * @return \DateTimeInterface
@@ -43,4 +46,17 @@ interface EntryContract extends HasId, Arrayable, ConvertsToResponse
 	 * @return  $this
 	 */
 	public function setDate($date): EntryContract;
+
+	/**
+	 * @return string
+	 */
+	public function getDateAsString(): string;
+
+	/**
+	 * Get all entry values as fieldId => value
+	 *
+	 * @return array
+	 */
+	public function valuesToArray() : array;
+
 }

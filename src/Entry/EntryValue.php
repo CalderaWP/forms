@@ -24,6 +24,8 @@ class EntryValue implements HasValue, HasSlug, HasId
 {
 	use ProvidesValue, ProvidesSlug, ProvidesIdGeneric;
 
+	/** @var @int */
+	protected $entryId;
 	/**
 	 * @var FieldModelContract
 	 */
@@ -39,6 +41,49 @@ class EntryValue implements HasValue, HasSlug, HasId
 		$this->setField($field);
 	}
 
+	/** @inheritdoc */
+	public function getId()
+	{
+		return $this->id ? $this->id : $this->getSlug();
+	}
+
+	/**
+	 * Create EntryValue from database results
+	 *
+	 * @param array $result
+	 * @param FormModelContract $form
+	 *
+	 * @return EntryValue
+	 * @throws \Exception
+	 */
+	public static function fromDataBaseResults(array $result, FormModelContract $form ): EntryValue
+	{
+		$obj = static::fromArray([
+			'id' => $result['id'],
+			'entryId' => $result['entry_id'],
+			'fieldId' => $result['field_id' ],
+			'value' => $result['value'],
+			'form' => $form,
+			'slug' => $result['slug']
+		]);
+		return $obj;
+
+	}
+
+	public function toDatabaseArray() : array
+	{
+		return [
+			'id' => $this->getId(),
+			'entry_id' => $this->getEntryId(),
+			'field_id' => $this->getFieldId(),
+			'value' => $this->getValue(),
+			'slug' => $this->getSlug(),
+			'form_id' =>$this->getFormId()
+		];
+	}
+
+
+	/** @inheritdoc */
 	public static function fromArray(array $items): EntryValue
 	{
 		$form = null;
@@ -73,6 +118,7 @@ class EntryValue implements HasValue, HasSlug, HasId
 					 'id' => 'setId',
 					 'slug' => 'setSlug',
 					 'value' => 'setValue',
+					 'entryId' => 'setEntryId'
 				 ] as $key => $setter) {
 			if (!empty($items[ $key ])) {
 				try {
@@ -94,10 +140,32 @@ class EntryValue implements HasValue, HasSlug, HasId
 			'fieldId' => $this->getFieldId(),
 			'formId' => $this->getFormId(),
 			'slug' => $this->getFieldSlug(),
+			'entryId' => $this->getEntryId(),
 			'id' => $this->getId(),
 			'value' => $this->getValue(),
 		];
 	}
+
+	/**
+	 * @return int
+	 */
+	public function getEntryId() :int
+	{
+		return is_numeric($this->entryId)? (int) $this->entryId : 0;
+	}
+
+	/**
+	 * @param int $entryId
+	 *
+	 * @return EntryValue
+	 */
+	public function setEntryId(int $entryId):EntryValue
+	{
+		$this->entryId = $entryId;
+		return $this;
+	}
+
+
 
 	/**
 	 * @return FieldModelContract

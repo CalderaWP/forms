@@ -57,7 +57,6 @@ class ContactForm extends FormModel
 				[
 					'id' => self::CONSENT,
 					'type' => 'checkbox',
-					'html5type' => 'email',
 					'label' => 'Do you consent to sharing your personally identifying data?',
 					'description' => 'Learn more by reading our privacy policy'
 				]

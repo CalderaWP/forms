@@ -4,8 +4,8 @@
 namespace calderawp\caldera\Forms;
 
 use calderawp\caldera\Forms\Traits\PreparesFieldsFromArray;
-use calderawp\interop\Caldera;
 use calderawp\caldera\Forms\Contracts\FormModelContract;
+use calderawp\interop\Caldera;
 use calderawp\interop\Contracts\Interoperable;
 use calderawp\interop\Contracts\Rest\RestResponseContract;
 use calderawp\interop\Traits\CalderaForms\ProvidesFields;

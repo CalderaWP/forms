@@ -12,11 +12,14 @@ use calderawp\caldera\Forms\Contracts\FormsCollectionContract;
 use calderawp\caldera\Forms\Contracts\FormModelContract;
 use calderawp\caldera\Forms\Contracts\EntryCollectionContract;
 use calderawp\caldera\Forms\Contracts\EntryContract;
+use calderawp\caldera\DataSource\Contracts\SourceContract as Source;
+use \calderawp\caldera\Forms\Contracts\DataSourcesContract as DataSources;
 
 class CalderaForms extends Module implements CalderaFormsContract
 {
 	const IDENTIFIER = 'calderaForms';
 
+	protected $dataSources;
 	/**
 	 * @inheritDoc
 	 */
@@ -25,6 +28,9 @@ class CalderaForms extends Module implements CalderaFormsContract
 		return self::IDENTIFIER;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function registerServices(ServiceContainer $container): CalderaModule
 	{
 		$container->singleton(FormsCollectionContract::class, function () {
@@ -41,6 +47,9 @@ class CalderaForms extends Module implements CalderaFormsContract
 	/** @inheritdoc */
 	public function findForm(string $by, $searchValue = 'id'): FormsCollectionContract
 	{
+		if ($this->hasPrimaryDataSourceSet()) {
+			return $this;
+		}
 		$found = [];
 		if ('id' === $by) {
 			try {
@@ -143,6 +152,29 @@ class CalderaForms extends Module implements CalderaFormsContract
 			->getServiceContainer()
 			->make(EntryCollectionContract::class);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function setPrimaryDataSource(DataSources $sources): CalderaFormsContract
+	{
+		$this->dataSources = $sources;
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getPrimaryDataSource(): DataSources
+	{
+		return $this->dataSources;
+	}
+
+	protected function hasPrimaryDataSourceSet() : bool
+	{
+		return isset($this->dataSources);
+	}
+
 
 	/**
 	 * @param $searchValue

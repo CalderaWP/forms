@@ -6,7 +6,6 @@ namespace calderawp\caldera\Forms;
 use calderawp\caldera\Forms\Field\FieldConfig;
 use calderawp\caldera\Forms\Contracts\FieldModelContract;
 use calderawp\interop\Contracts\Interoperable;
-use calderawp\interop\Model;
 use calderawp\interop\Traits\CalderaForms\ProvidesField;
 use calderawp\interop\Traits\CalderaForms\ProvidesForm;
 use calderawp\interop\Traits\ProvidesDescription;
@@ -33,6 +32,13 @@ class FieldModel extends Model implements FieldModelContract
 	public function getType(): string
 	{
 		return is_string($this->type) ? $this->type : 'text';
+	}
+
+
+	/** @inheritdoc */
+	public function getSlug(): string
+	{
+		return is_string($this->slug) ? $this->slug : $this->id;
 	}
 
 	public function setType(string $type): FieldModelContract

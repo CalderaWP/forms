@@ -5,6 +5,7 @@ namespace calderawp\caldera\Forms\Contracts;
 
 use calderawp\interop\Contracts\CalderaModule;
 use calderawp\interop\Exception;
+use \calderawp\caldera\Forms\Contracts\DataSourcesContract as DataSources;
 
 interface CalderaFormsContract extends CalderaModule
 {
@@ -19,7 +20,7 @@ interface CalderaFormsContract extends CalderaModule
 	 */
 	public function findForm(string $by, $searchValue = 'id'):FormsCollectionContract;
 	/**
-	 * Get formscollection
+	 * Get forms collection
 	 *
 	 * @return FormsCollectionContract
 	 */
@@ -39,4 +40,21 @@ interface CalderaFormsContract extends CalderaModule
 	 * @return EntryCollectionContract
 	 */
 	public function getEntries():EntryCollectionContract;
+
+
+	/**
+	 * Set primary data source
+	 *
+	 * @param DataSources $sources
+	 *
+	 * @return CalderaFormsContract
+	 */
+	public function setPrimaryDataSource(DataSources $sources): CalderaFormsContract;
+
+	/**
+	 * Get the current primary data source
+	 *
+	 * @return DataSources
+	 */
+	public function getPrimaryDataSource(): DataSources;
 }

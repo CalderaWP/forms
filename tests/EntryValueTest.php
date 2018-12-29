@@ -3,6 +3,7 @@
 namespace calderawp\caldera\Forms\Tests;
 
 use calderawp\caldera\Forms\Entry\EntryValue;
+use calderawp\caldera\Forms\FormModel;
 
 class EntryValueTest extends TestCase
 {
@@ -219,5 +220,25 @@ class EntryValueTest extends TestCase
 		$entryValue = new EntryValue($form, $field);
 		$this->assertEquals($field->getId(), $entryValue->getFieldId());
 		$this->assertEquals($field->getId(), $entryValue->getField()->getId());
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Entry\EntryValue::fromDataBaseResults()
+	 */
+	public function testFromDatabaseResults(){
+
+		$result = array (
+			'id' => '182',
+			'entry_id' => '67',
+			'field_id' => 'firstName',
+			'slug' => 'firstName',
+			'value' => 'Roy',
+		);
+		$form = \Mockery::mock('Form', FormModel::class );
+		$entryValue = EntryValue::fromDataBaseResults($result,$form);
+		$this->assertSame($entryValue->getEntryId(), (int)$result['entry_id']);
+		$this->assertSame($entryValue->getId(), $result['id']);
+		$this->assertSame($entryValue->getSlug(), $result['slug']);
+		$this->assertSame($entryValue->getValue(), $result['value']);
 	}
 }

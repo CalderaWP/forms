@@ -4,9 +4,12 @@
 namespace calderawp\caldera\Forms\Entry;
 
 use calderawp\caldera\Forms\Contracts\CollectsEntryValues;
+use calderawp\caldera\Forms\Contracts\FormModelContract;
+use calderawp\caldera\Forms\FormModel;
 use calderawp\interop\Contracts\Arrayable;
+use calderawp\interop\Traits\ItemsIterator;
 
-class EntryValues implements CollectsEntryValues, Arrayable
+class EntryValues implements CollectsEntryValues, Arrayable, \IteratorAggregate
 {
 
 	/**
@@ -14,7 +17,9 @@ class EntryValues implements CollectsEntryValues, Arrayable
 	 */
 	protected $items;
 
+	use ItemsIterator;
 
+	/** @inheritdoc */
 	public function toArray(): array
 	{
 		$array = [];
@@ -24,9 +29,24 @@ class EntryValues implements CollectsEntryValues, Arrayable
 				$array[ $item->getId() ] = $item->toArray();
 			}
 		}
+
+
 		return $array;
 	}
 
+
+	public static function fromDatabaseResults(array $results, FormModelContract $form ) : EntryValues
+	{
+		$obj = new static();
+		foreach($results as $result ){
+			$entryValue = EntryValue::fromArray($result);
+			$obj->addValue($entryValue);
+		}
+
+		return $obj;
+	}
+
+	/** @inheritdoc */
 	public static function fromArray(array $items) : EntryValues
 	{
 		$obj = new static();
@@ -40,6 +60,7 @@ class EntryValues implements CollectsEntryValues, Arrayable
 	}
 
 
+	/** @inheritdoc */
 	public function jsonSerialize()
 	{
 		return $this->toArray();

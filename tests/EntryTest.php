@@ -36,13 +36,26 @@ class EntryTest extends TestCase
 		$entryId2 = 22 + rand(10, 20);
 		$field = $this->field($fieldId1, [], $form);
 		$field2 = $this->field($fieldId2, [], $form);
+
 		$entryValue = (new EntryValue($form, $field))->setId($entryId1);
+		$entryValue->setValue('e1');
+		$this->assertSame('e1', $entryValue->getValue());
 		$entryValue2 = (new EntryValue($form, $field2))->setId($entryId2);
+		$entryValue2->setValue('e2');
+		$this->assertSame('e2', $entryValue2->getValue());
+
+
 		$entryValues = (new EntryValues())->addValue($entryValue)->addValue($entryValue2);
+
 		$entry = (new Entry())->setEntryValues($entryValues);
+		$entry->setFormId('cf1' );
 
 		$this->assertAttributeEquals($entryValues, 'entryValues', $entry);
 		$this->assertSame($entryValues, $entry->getEntryValues());
+
+		$this->assertSame([
+			'e1', 'e2'
+		],array_values($entry->valuesToArray()));
 	}
 
 	/**
@@ -96,7 +109,7 @@ class EntryTest extends TestCase
 		$field2 = $this->field($fieldId2, [], $form);
 		$entryValue = (new EntryValue($form, $field))->setId($entryId1);
 		$entryValue2 = (new EntryValue($form, $field2))->setId($entryId2);
-		$entryValues = (new EntryValues())->addValue($entryValue)->addValue($entryValue2);
+		$entryValues = (new EntryValues())->addValue($entryValue);
 		$date = new \DateTimeImmutable(date(Entry::DATE_FORMAT, time()));
 		$entryId = 1;
 		$entry = (new Entry())
@@ -192,4 +205,23 @@ class EntryTest extends TestCase
 		$entry->setFormId($formId);
 		$this->assertAttributeEquals($formId, 'formId', $entry);
 	}
+
+
+	/** @covers Entry::fromDatabaseResult() */
+	public function testFromDatabaseResult()
+	{
+		$result = array (
+			'id' => '1',
+			'form_id' => 'contact-form',
+			'user_id' => '7',
+			'datestamp' => '2018-12-29 16:06:06',
+		);
+
+		$entry = Entry::fromDatabaseResult($result);
+		$this->assertSame($result['id'], $entry->getId());
+		$this->assertSame($result['form_id'], $entry->getFormId());
+		$this->assertSame((int)$result['user_id'], $entry->getUserId());
+		$this->assertSame($result['datestamp'], $entry->getDateAsString());
+	}
+
 }

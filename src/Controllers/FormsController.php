@@ -3,12 +3,11 @@
 
 namespace calderawp\caldera\Forms\Controllers;
 
-use calderawp\caldera\Forms\CalderaForms;
 use calderawp\caldera\Forms\Contracts\FormModelContract as Form;
+use calderawp\caldera\Forms\Contracts\FormsCollectionContract as Forms;
 use calderawp\caldera\Forms\Exception;
 use calderawp\caldera\Forms\FormModel;
 use calderawp\caldera\Forms\FormsCollection;
-use calderawp\caldera\restApi\Controller;
 use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 use calderawp\interop\Contracts\Rest\RestResponseContract as Response;
 
@@ -27,7 +26,9 @@ class FormsController extends CalderaFormsController
 	 */
 	public function getForm($form, Request $request) : Form
 	{
-		if (! is_null($form)) {
+		$methodName = __FUNCTION__;
+		$form = $this->applyFilters("caldera/forms/$methodName", $form, $request );
+		if (is_a($form, Form::class)) {
 			return $form;
 		}
 		try {
@@ -63,7 +64,8 @@ class FormsController extends CalderaFormsController
 	 */
 	public function getForms($forms, Request $request) : FormsCollection
 	{
-		if (! is_null($forms)) {
+		$forms = $this->applyBeforeFilter(__FUNCTION__, $forms, $request );
+		if (is_a($forms, Forms::class)) {
 			return $forms;
 		}
 		return $this
@@ -94,7 +96,8 @@ class FormsController extends CalderaFormsController
 	 */
 	public function createForm($form, Request $request) : Form
 	{
-		if (! is_null($form)) {
+		$form = $this->applyBeforeFilter(__FUNCTION__, $form, $request );
+		if (is_a($form, Form::class)) {
 			return $form;
 		}
 		throw new Exception('Not Implemented', 501);
