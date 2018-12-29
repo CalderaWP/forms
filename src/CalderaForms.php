@@ -7,7 +7,6 @@ use calderawp\caldera\Forms\Forms\ContactForm;
 use calderawp\CalderaContainers\Service\Container as ServiceContainer;
 use calderawp\interop\Contracts\CalderaModule;
 use calderawp\interop\Module;
-use calderawp\caldera\Db\Contracts\FormsDb;
 use calderawp\caldera\Forms\Contracts\CalderaFormsContract;
 use calderawp\caldera\Forms\Contracts\FormsCollectionContract;
 use calderawp\caldera\Forms\Contracts\FormModelContract;
@@ -16,7 +15,8 @@ use calderawp\caldera\Forms\Contracts\EntryContract;
 
 class CalderaForms extends Module implements CalderaFormsContract
 {
-	const IDENTIFIER  = 'calderaForms';
+	const IDENTIFIER = 'calderaForms';
+
 	/**
 	 * @inheritDoc
 	 */
@@ -38,18 +38,14 @@ class CalderaForms extends Module implements CalderaFormsContract
 		return $this;
 	}
 
-
-	public function getFormsDb(): FormsDb
-	{
-	}
-
-	public function findForm(string $by, $searchValue): FormsCollectionContract
+	/** @inheritdoc */
+	public function findForm(string $by, $searchValue = 'id'): FormsCollectionContract
 	{
 		$found = [];
 		if ('id' === $by) {
 			try {
 				$form = $this->findFormById($searchValue);
-				$found[] =  $form;
+				$found[] = $form;
 			} catch (Exception $e) {
 				throw $e;
 			}
@@ -65,6 +61,7 @@ class CalderaForms extends Module implements CalderaFormsContract
 					}
 			}
 		} else {
+			//@todo
 		}
 		if (empty($found)) {
 			throw new Exception('Form not found', 404);
@@ -78,6 +75,11 @@ class CalderaForms extends Module implements CalderaFormsContract
 		return $collection;
 	}
 
+	/**
+	 * Get forms  collection
+	 *
+	 * @return FormsCollectionContract
+	 */
 	public function getForms(): FormsCollectionContract
 	{
 		return $this
@@ -93,7 +95,7 @@ class CalderaForms extends Module implements CalderaFormsContract
 	 * @return EntryCollectionContract
 	 * @throws Exception
 	 */
-	public function findEntryBy(string $by, $searchValue): EntryCollectionContract
+	public function findEntryBy(string $by, $searchValue = 'id'): EntryCollectionContract
 	{
 		if ('id' === $by) {
 			if ($this->getEntries()->hasEntry($searchValue)) {
