@@ -9,6 +9,7 @@ use calderawp\caldera\Forms\Exception;
 use calderawp\caldera\Forms\FormModel;
 use calderawp\caldera\Forms\FormsCollection;
 use calderawp\caldera\Forms\Tests\EntryTest;
+use calderawp\caldera\Forms\Traits\AddsEntryValuesFromRequest;
 use calderawp\caldera\restApi\Controller;
 use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 use calderawp\interop\Contracts\Rest\RestResponseContract as Response;
@@ -18,7 +19,7 @@ use calderawp\caldera\Forms\Contracts\EntryContract as Entry;
 class EntryController extends CalderaFormsController
 {
 
-
+	use AddsEntryValuesFromRequest;
 	/**
 	 * Handle request for single entry
 	 *
@@ -74,13 +75,14 @@ class EntryController extends CalderaFormsController
 			}
 			$entry = new \calderawp\caldera\Forms\Entry\Entry();
 			$entry->setFormId($formId);
-			$this->addEntryValues($entry, $request, $form);
+			$entry = $this->addEntryValues($entry, $request, $form);
 		} catch (Exception $e) {
 			throw $e;
 		}
 
 		return $entry;
 	}
+
 
 	/**
 	 * Convert request for a single entry result to response

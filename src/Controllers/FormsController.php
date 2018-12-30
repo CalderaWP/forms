@@ -26,8 +26,7 @@ class FormsController extends CalderaFormsController
 	 */
 	public function getForm($form, Request $request) : Form
 	{
-		$methodName = __FUNCTION__;
-		$form = $this->applyFilters("caldera/forms/$methodName", $form, $request);
+		$form = $this->applyBeforeFilter(__FUNCTION__, $form, $request);
 		if (is_a($form, Form::class)) {
 			return $form;
 		}

@@ -66,23 +66,4 @@ class CalderaFormsControllerTest extends TestCase
 		$this->assertSame(33, $returnValue);
 	}
 
-	public function testFilterA()
-	{
-		$results = new \stdClass();
-
-		$controller = new EntryController($this->calderaForms());
-
-		$filterName4 = 'test4';
-		$controller->addFilter($filterName4, function ($arg, $request) use ($results) {
-			$results->four = true;
-			$results->fourRequest = $request;
-			return 333;
-		}, 10, 2);
-		$request = new MockRequest();
-
-		$returnValue = $controller->applyFilters($filterName4, null, 221);
-		$this->assertTrue($results->four);
-		$this->assertSame(333, $returnValue);
-		$this->assertSame($request, $results->fourRequest);
-	}
 }

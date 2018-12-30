@@ -141,7 +141,7 @@ class EntryValues implements CollectsEntryValues, Arrayable, \IteratorAggregate
 	 */
 	protected function findById($id): ?EntryValue
 	{
-		return array_key_exists($id, $this->items) ? $this->items[ $id ] : null;
+		return is_array($this->items) && array_key_exists($id, $this->items) ? $this->items[ $id ] : null;
 	}
 
 	/**
