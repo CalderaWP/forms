@@ -172,7 +172,7 @@ class Entry implements EntryContract
 		return $this->entryValues;
 	}
 
-	public function addEntryValue( EntryValue $value ): EntryContract
+	public function addEntryValue(EntryValue $value): EntryContract
 	{
 		$this
 			->getEntryValues()
@@ -218,8 +218,7 @@ class Entry implements EntryContract
 		$values = [];
 
 		/** @var EntryValue $value */
-		foreach ( $this->entryValues as $value ){
-
+		foreach ($this->entryValues as $value) {
 			$values[$value->getFieldId()]= $value->getValue();
 		}
 		return $values;

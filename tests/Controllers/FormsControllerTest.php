@@ -107,19 +107,19 @@ class FormsControllerTest extends TestCase
 	public function testFilters()
 	{
 		$arg2 = new \stdClass();
-		$expectedForm = \Mockery::mock('Form', Form::class );
-		$expectedForm2 = \Mockery::mock('Form', Form::class );
+		$expectedForm = \Mockery::mock('Form', Form::class);
+		$expectedForm2 = \Mockery::mock('Form', Form::class);
 		$expectedForms = \Mockery::mock('Forms', FormsCollection::class);
 		$value = null;
 		$calderaForms = $this->calderaForms();
 		$controller = new FormsController($calderaForms);
 
-		$controller->addFilter("caldera/forms/getForm", function ($form,$request) use ($expectedForm,$arg2) {
+		$controller->addFilter("caldera/forms/getForm", function ($form, $request) use ($expectedForm, $arg2) {
 			$arg2->getForm = $request;
 			return $expectedForm;
-		},10,2);
+		}, 10, 2);
 		$this->assertSame($expectedForm, $controller->getForm(null, new MockRequest()));
-		$this->assertInstanceOf(MockRequest::class,$arg2->getForm );
+		$this->assertInstanceOf(MockRequest::class, $arg2->getForm);
 		$controller->addFilter("caldera/forms/createForm", function () use ($expectedForm2) {
 			return $expectedForm2;
 		});
@@ -129,7 +129,5 @@ class FormsControllerTest extends TestCase
 			return $expectedForms;
 		});
 		$this->assertSame($expectedForms, $controller->getForms(null, new MockRequest()));
-
 	}
-
 }

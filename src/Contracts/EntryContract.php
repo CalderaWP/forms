@@ -33,7 +33,7 @@ interface EntryContract extends HasId, Arrayable, ConvertsToResponse
 	public function setFormId(string $formId): EntryContract;
 
 	public function getEntryValues(): EntryValues;
-	public function addEntryValue( EntryValue $value ): EntryContract;
+	public function addEntryValue(EntryValue $value): EntryContract;
 
 	/**
 	 * @return \DateTimeInterface
@@ -58,5 +58,4 @@ interface EntryContract extends HasId, Arrayable, ConvertsToResponse
 	 * @return array
 	 */
 	public function valuesToArray() : array;
-
 }

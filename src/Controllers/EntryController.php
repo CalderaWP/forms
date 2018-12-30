@@ -30,8 +30,8 @@ class EntryController extends CalderaFormsController
 	 */
 	public function getEntry($entry, Request $request): Entry
 	{
-		$entry = $this->applyBeforeFilter(__FUNCTION__,$entry,$request);
-		if (is_a($entry,Entry::class)) {
+		$entry = $this->applyBeforeFilter(__FUNCTION__, $entry, $request);
+		if (is_a($entry, Entry::class)) {
 			return $entry;
 		}
 
@@ -58,8 +58,8 @@ class EntryController extends CalderaFormsController
 	 */
 	public function createEntry(?Entry $entry, Request $request) : Entry
 	{
-		$entry = $this->applyBeforeFilter(__FUNCTION__,$entry,$request);
-		if (is_a($entry,Entry::class)) {
+		$entry = $this->applyBeforeFilter(__FUNCTION__, $entry, $request);
+		if (is_a($entry, Entry::class)) {
 			return $entry;
 		}
 
@@ -105,8 +105,8 @@ class EntryController extends CalderaFormsController
 	 */
 	public function getEntries($entries, Request $request): Entries
 	{
-		$entries = $this->applyBeforeFilter(__FUNCTION__,$entries,$request);
-		if (is_a($entries,Entries::class)) {
+		$entries = $this->applyBeforeFilter(__FUNCTION__, $entries, $request);
+		if (is_a($entries, Entries::class)) {
 			return $entries;
 		}
 
@@ -126,6 +126,4 @@ class EntryController extends CalderaFormsController
 	{
 		return $entries->toResponse();
 	}
-
-
 }

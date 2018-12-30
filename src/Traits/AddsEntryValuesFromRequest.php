@@ -3,7 +3,6 @@
 
 namespace calderawp\caldera\Forms\Traits;
 
-
 use calderawp\caldera\Forms\Contracts\EntryContract as Entry;
 use calderawp\caldera\Forms\Entry\EntryValue;
 use calderawp\caldera\Forms\Entry\EntryValues;

@@ -20,7 +20,8 @@ class EntryCollection implements EntryCollectionContract, \IteratorAggregate
 		return 'addEntry';
 	}
 
-	public static function fromDatabaseResults(array $results ){
+	public static function fromDatabaseResults(array $results)
+	{
 		$obj = new static();
 		foreach ($results as $key => $entry) {
 			$entryObj = EntryModel::fromDatabaseResult($entry);

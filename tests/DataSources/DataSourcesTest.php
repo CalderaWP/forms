@@ -26,7 +26,7 @@ class DataSourcesTest extends TestCase
 			$entryValuesSource,
 			$resultHandlers
 		);
-		$this->assertSame($entrySource,$dataSources->getEntryDataSource());
+		$this->assertSame($entrySource, $dataSources->getEntryDataSource());
 	}
 
 	/** @covers FormsDataSources::getEntryValuesDataSource() */
@@ -42,7 +42,7 @@ class DataSourcesTest extends TestCase
 			$entryValuesSource,
 			$resultHandlers
 		);
-		$this->assertSame($entryValuesSource,$dataSources->getEntryValuesDataSource());
+		$this->assertSame($entryValuesSource, $dataSources->getEntryValuesDataSource());
 	}
 
 	/** @covers FormsDataSources::getFormsDataSource() */
@@ -58,6 +58,6 @@ class DataSourcesTest extends TestCase
 			$entryValuesSource,
 			$resultHandlers
 		);
-		$this->assertSame($formSource,$dataSources->getFormsDataSource());
+		$this->assertSame($formSource, $dataSources->getFormsDataSource());
 	}
 }

@@ -225,7 +225,8 @@ class EntryValueTest extends TestCase
 	/**
 	 * @covers \calderawp\caldera\Forms\Entry\EntryValue::fromDataBaseResults()
 	 */
-	public function testFromDatabaseResults(){
+	public function testFromDatabaseResults()
+	{
 
 		$result = array (
 			'id' => '182',
@@ -234,8 +235,8 @@ class EntryValueTest extends TestCase
 			'slug' => 'firstName',
 			'value' => 'Roy',
 		);
-		$form = \Mockery::mock('Form', FormModel::class );
-		$entryValue = EntryValue::fromDataBaseResults($result,$form);
+		$form = \Mockery::mock('Form', FormModel::class);
+		$entryValue = EntryValue::fromDataBaseResults($result, $form);
 		$this->assertSame($entryValue->getEntryId(), (int)$result['entry_id']);
 		$this->assertSame($entryValue->getId(), $result['id']);
 		$this->assertSame($entryValue->getSlug(), $result['slug']);

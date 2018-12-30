@@ -3,7 +3,6 @@
 
 namespace calderawp\caldera\Forms\Tests\Controllers;
 
-
 use calderawp\caldera\Forms\Controllers\EntryController;
 use calderawp\caldera\Forms\Tests\TestCase;
 use calderawp\interop\Tests\Mocks\MockRequest;
@@ -26,7 +25,8 @@ class CalderaFormsControllerTest extends TestCase
 			$results->oneArg2 = $arg2;
 			return 5;
 		}, 10, 2);
-		$this->assertSame(5,
+		$this->assertSame(
+			5,
 			$controller->applyFilters($filterName, null, 22)
 		);
 		$this->assertTrue($results->one);
@@ -64,9 +64,6 @@ class CalderaFormsControllerTest extends TestCase
 		$returnValue = $controller->applyFilters($filterName3, null);
 		$this->assertTrue($results->three);
 		$this->assertSame(33, $returnValue);
-
-
-
 	}
 
 	public function testFilterA()

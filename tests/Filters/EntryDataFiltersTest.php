@@ -11,20 +11,20 @@ class EntryDataFiltersTest extends TestCase
 
 	public function testCreateEntry()
 	{
-		$dataSource = \Mockery::mock('FormsDataSources', FormsDataSources::class );
-		$entryDataSource = \Mockery::mock( 'SourceContract',\calderawp\caldera\DataSource\Contracts\SourceContract::class )
-			->shouldReceive('create' )
+		$dataSource = \Mockery::mock('FormsDataSources', FormsDataSources::class);
+		$entryDataSource = \Mockery::mock('SourceContract', \calderawp\caldera\DataSource\Contracts\SourceContract::class)
+			->shouldReceive('create')
 			->andReturn(7);
 
-		$expectedEntry = \Mockery::mock('Entry', \calderawp\caldera\Forms\Contracts\EntryContract::class );
+		$expectedEntry = \Mockery::mock('Entry', \calderawp\caldera\Forms\Contracts\EntryContract::class);
 		$entryDataSource
-			->shouldReceive('create' )
+			->shouldReceive('create')
 			->andReturn(7);
 		$entryDataSource
-			->shouldReceive('read' )
+			->shouldReceive('read')
 			->andReturn($expectedEntry);
 		$dataSource
-			->shouldReceive('getEntryDataSource' )
+			->shouldReceive('getEntryDataSource')
 			->andReturn($entryDataSource);
 
 
@@ -32,16 +32,15 @@ class EntryDataFiltersTest extends TestCase
 			$this->core()->getEvents()->getHooks(),
 			$dataSource
 		);
-		$request = \Mockery::mock('Request', \calderawp\caldera\restApi\Request::class );
+		$request = \Mockery::mock('Request', \calderawp\caldera\restApi\Request::class);
 		$request
-			->shouldReceive( 'getParam' )
-			->andReturn( 'contact-form' );
+			->shouldReceive('getParam')
+			->andReturn('contact-form');
 		$entry = $entryDataFilters->createEntry(null, $request);
-		$this->assertSame($expectedEntry,$entry);
+		$this->assertSame($expectedEntry, $entry);
 	}
 
 	public function testGetEntries()
 	{
-
 	}
 }

@@ -56,7 +56,7 @@ class EntryValue implements HasValue, HasSlug, HasId
 	 * @return EntryValue
 	 * @throws \Exception
 	 */
-	public static function fromDataBaseResults(array $result, FormModelContract $form ): EntryValue
+	public static function fromDataBaseResults(array $result, FormModelContract $form): EntryValue
 	{
 		$obj = static::fromArray([
 			'id' => $result['id'],
@@ -67,7 +67,6 @@ class EntryValue implements HasValue, HasSlug, HasId
 			'slug' => $result['slug']
 		]);
 		return $obj;
-
 	}
 
 	public function toDatabaseArray() : array

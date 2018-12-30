@@ -48,14 +48,14 @@ class EntryTest extends TestCase
 		$entryValues = (new EntryValues())->addValue($entryValue)->addValue($entryValue2);
 
 		$entry = (new Entry())->setEntryValues($entryValues);
-		$entry->setFormId('cf1' );
+		$entry->setFormId('cf1');
 
 		$this->assertAttributeEquals($entryValues, 'entryValues', $entry);
 		$this->assertSame($entryValues, $entry->getEntryValues());
 
 		$this->assertSame([
 			'e1', 'e2'
-		],array_values($entry->valuesToArray()));
+		], array_values($entry->valuesToArray()));
 	}
 
 	/**
@@ -223,5 +223,4 @@ class EntryTest extends TestCase
 		$this->assertSame((int)$result['user_id'], $entry->getUserId());
 		$this->assertSame($result['datestamp'], $entry->getDateAsString());
 	}
-
 }

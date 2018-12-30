@@ -27,7 +27,7 @@ class FormsController extends CalderaFormsController
 	public function getForm($form, Request $request) : Form
 	{
 		$methodName = __FUNCTION__;
-		$form = $this->applyFilters("caldera/forms/$methodName", $form, $request );
+		$form = $this->applyFilters("caldera/forms/$methodName", $form, $request);
 		if (is_a($form, Form::class)) {
 			return $form;
 		}
@@ -64,7 +64,7 @@ class FormsController extends CalderaFormsController
 	 */
 	public function getForms($forms, Request $request) : FormsCollection
 	{
-		$forms = $this->applyBeforeFilter(__FUNCTION__, $forms, $request );
+		$forms = $this->applyBeforeFilter(__FUNCTION__, $forms, $request);
 		if (is_a($forms, Forms::class)) {
 			return $forms;
 		}
@@ -96,7 +96,7 @@ class FormsController extends CalderaFormsController
 	 */
 	public function createForm($form, Request $request) : Form
 	{
-		$form = $this->applyBeforeFilter(__FUNCTION__, $form, $request );
+		$form = $this->applyBeforeFilter(__FUNCTION__, $form, $request);
 		if (is_a($form, Form::class)) {
 			return $form;
 		}

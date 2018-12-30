@@ -76,7 +76,8 @@ class FieldConfigTest extends TestCase
 	 * @covers \calderawp\caldera\Forms\Field\FieldConfig::getOtherConfigOption()
 	 * @covers \calderawp\caldera\Forms\Field\FieldConfig::isValidOtherConfigOption()
 	 */
-	public function testAllowsAttributes(){
+	public function testAllowsAttributes()
+	{
 		$fieldArray = [
 			'attributes' => [
 				'min' => 5,
@@ -90,5 +91,4 @@ class FieldConfigTest extends TestCase
 			'max' => 12
 		], $fieldConfig->getOtherConfigOption('attributes'));
 	}
-
 }

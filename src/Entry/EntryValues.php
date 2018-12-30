@@ -35,10 +35,10 @@ class EntryValues implements CollectsEntryValues, Arrayable, \IteratorAggregate
 	}
 
 
-	public static function fromDatabaseResults(array $results, FormModelContract $form ) : EntryValues
+	public static function fromDatabaseResults(array $results, FormModelContract $form) : EntryValues
 	{
 		$obj = new static();
-		foreach($results as $result ){
+		foreach ($results as $result) {
 			$entryValue = EntryValue::fromArray($result);
 			$obj->addValue($entryValue);
 		}

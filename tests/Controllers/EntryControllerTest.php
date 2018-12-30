@@ -159,8 +159,8 @@ class EntryControllerTest extends TestCase
 	 */
 	public function testFilters()
 	{
-		$expectedEntry = \Mockery::mock('Entry', Entry::class );
-		$expectedEntry2 = \Mockery::mock('Entry', Entry::class );
+		$expectedEntry = \Mockery::mock('Entry', Entry::class);
+		$expectedEntry2 = \Mockery::mock('Entry', Entry::class);
 		$expectedEntries = \Mockery::mock('Entries', \calderawp\caldera\Forms\Contracts\EntryCollectionContract::class);
 		$value = null;
 		$calderaForms = $this->calderaForms();
@@ -178,7 +178,5 @@ class EntryControllerTest extends TestCase
 			return $expectedEntries;
 		});
 		$this->assertSame($expectedEntries, $controller->getEntries(null, new MockRequest()));
-
 	}
-
 }

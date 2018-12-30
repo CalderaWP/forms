@@ -114,7 +114,8 @@ class EntryValuesTest extends TestCase
 	/**
 	 * @covers \calderawp\caldera\Forms\Entry\EntryValues::getIterator();
 	 */
-	public function testItteration(){
+	public function testItteration()
+	{
 		$formId = 'cf1';
 		$form = $this->form($formId);
 		$fieldId1 = 'f1';
@@ -136,14 +137,13 @@ class EntryValuesTest extends TestCase
 		]);
 
 		$calls = 0;
-		foreach ($values as $value ){
-			$this->assertTrue(in_array( $value->getId(), [
+		foreach ($values as $value) {
+			$this->assertTrue(in_array($value->getId(), [
 				$entryId1,
 				$entryId2
 			]));
 			$calls++;
-
 		}
-		$this->assertSame(2,$calls);
+		$this->assertSame(2, $calls);
 	}
 }
