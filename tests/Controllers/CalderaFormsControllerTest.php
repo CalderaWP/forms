@@ -65,5 +65,4 @@ class CalderaFormsControllerTest extends TestCase
 		$this->assertTrue($results->three);
 		$this->assertSame(33, $returnValue);
 	}
-
 }
