@@ -19,7 +19,7 @@ class ProcessorTest extends TestCase
 
 	public function testCheckConditionals()
 	{
-		$this->markTestSkipped( 'Not implemented yet' );
+		$this->markTestSkipped('Not implemented yet');
 	}
 
 	public function testPostProcess()
@@ -38,14 +38,21 @@ class ProcessorTest extends TestCase
 			->shouldReceive('process')
 			->andReturn($fields);
 		$form = $this->getFormArrayLike();
-		$processor = new Processor(
+		$processor = new class(
 			['slug' => 'send-sms'],
 			$processorConfig,
 			$form,
 			[
 				Processor::POST_PROCESS => $processCallback,
 			]
-		);
+		) extends Processor
+		{
+			public function getProcessorType(): string
+			{
+				return 'testType';
+			}
+		};
+
 		$processor->postProcess($fields, $request);
 
 
@@ -71,7 +78,8 @@ class ProcessorTest extends TestCase
 			->shouldReceive('process')
 			->andReturn($fields);
 		$form = $this->getFormArrayLike();
-		$processor = new Processor(
+
+		$processor = new class(
 			['slug' => 'send-sms'],
 			$processorConfig,
 			$form,
@@ -79,19 +87,32 @@ class ProcessorTest extends TestCase
 				Processor::PRE_PROCESS => $processCallback,
 				Processor::POST_PROCESS => [$this, 'noop'],
 			]
-		);
+		) extends Processor
+		{
+			public function getProcessorType(): string
+			{
+				return 'testType';
+			}
+		};
+
 		$processor->preProcess($fields, $request);
 	}
 
 	public function testGetForm()
 	{
 		$form = $this->getFormArrayLike();
-		$processor = new Processor(
+		$processor = new class(
 			['slug' => 'send-sms'],
 			new ProcessorConfig(),
 			$form
-			);
-		$this->assertEquals($form, $processor->getForm() );
+		) extends Processor
+		{
+			public function getProcessorType(): string
+			{
+				return 'testType';
+			}
+		};
+		$this->assertEquals($form, $processor->getForm());
 	}
 
 
@@ -111,16 +132,20 @@ class ProcessorTest extends TestCase
 			->shouldReceive('process')
 			->andReturn($fields);
 		$form = $this->getFormArrayLike();
-		$processor = new Processor(
-			['slug' => 'send-sms'],
+
+		$processor = new class(['slug' => 'send-sms'],
 			$processorConfig,
 			$form,
 			[
 				Processor::PRE_PROCESS => [$this, 'noop'],
 				Processor::PROCESS => $processCallback,
 				Processor::POST_PROCESS => [$this, 'noop'],
-			]
-		);
+			] ) extends Processor{
+			public function getProcessorType(): string
+			{
+				return 'testType';
+			}
+		};
 		$processor->mainProcess($fields, $request);
 	}
 

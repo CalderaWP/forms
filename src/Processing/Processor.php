@@ -9,10 +9,11 @@ use calderawp\interop\Contracts\UpdateableFormFieldsContract as FormFields;
 
 use calderawp\interop\Contracts\ProcessorContract;
 
-class Processor implements ProcessorContract
+abstract class Processor implements ProcessorContract
 {
 
 	const PRE_PROCESS = 'preProcessStage1';
+
 	const PROCESS = 'mainProcessStage1';
 	const POST_PROCESS = 'postProcessStage1';
 	protected $callbacks;
