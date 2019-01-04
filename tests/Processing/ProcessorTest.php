@@ -7,6 +7,7 @@ use calderawp\caldera\Forms\FormArrayLike;
 use calderawp\caldera\Forms\FormModel;
 use calderawp\caldera\Forms\Processing\FormFieldsWithUpdate;
 use calderawp\caldera\Forms\Processing\ProcessorConfig;
+use calderawp\caldera\Forms\Processing\ProcessorMeta;
 use calderawp\caldera\Forms\Tests\TestCase;
 use calderawp\caldera\Forms\Processing\Processor;
 use calderawp\caldera\Processing\ProcessCallback;
@@ -21,6 +22,9 @@ class ProcessorTest extends TestCase
 		$this->markTestSkipped('Not implemented yet');
 	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\Processor::postProcess();
+	 */
 	public function testPostProcess()
 	{
 		$fields = new FormFieldsWithUpdate([
@@ -38,7 +42,7 @@ class ProcessorTest extends TestCase
 			->andReturn($fields);
 		$form = $this->getFormArrayLike();
 		$processor = new class(
-			['slug' => 'send-sms'],
+			new ProcessorMeta(['label' => 'Send an sms']),
 			$processorConfig,
 			$form,
 			[
@@ -55,10 +59,17 @@ class ProcessorTest extends TestCase
 		$processor->postProcess($fields, $request);
 	}
 
+	/**
+	 * This function must exist, and never run.
+	 */
 	public function noop()
 	{
+		throw new \Exception('The handler that was not supposed to be called was called');
 	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\Processor::preProcess()
+	 */
 	public function testPreProcess()
 	{
 		$fields = new FormFieldsWithUpdate([
@@ -77,7 +88,7 @@ class ProcessorTest extends TestCase
 		$form = $this->getFormArrayLike();
 
 		$processor = new class(
-			['slug' => 'send-sms'],
+			new ProcessorMeta(['label' => 'Send an sms']),
 			$processorConfig,
 			$form,
 			[
@@ -95,11 +106,14 @@ class ProcessorTest extends TestCase
 		$processor->preProcess($fields, $request);
 	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\Processor::getForm()
+	 */
 	public function testGetForm()
 	{
 		$form = $this->getFormArrayLike();
 		$processor = new class(
-			['slug' => 'send-sms'],
+			new ProcessorMeta(['label' => 'Send an sms']),
 			new ProcessorConfig(),
 			$form
 		) extends Processor
@@ -112,7 +126,9 @@ class ProcessorTest extends TestCase
 		$this->assertEquals($form, $processor->getForm());
 	}
 
-
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\Processor::mainProcess()
+	 */
 	public function testMainProcess()
 	{
 		$fields = new FormFieldsWithUpdate([
@@ -130,14 +146,16 @@ class ProcessorTest extends TestCase
 			->andReturn($fields);
 		$form = $this->getFormArrayLike();
 
-		$processor = new class(['slug' => 'send-sms'],
+		$processor = new class(
+			new ProcessorMeta(['label' => 'Send an sms']),
 			$processorConfig,
 			$form,
 			[
 				Processor::PRE_PROCESS => [$this, 'noop'],
 				Processor::PROCESS => $processCallback,
 				Processor::POST_PROCESS => [$this, 'noop'],
-			] ) extends Processor{
+			]) extends Processor
+		{
 			public function getProcessorType(): string
 			{
 				return 'testType';
@@ -160,5 +178,52 @@ class ProcessorTest extends TestCase
 		]);
 
 		return FormArrayLike::fromModel($model);
+	}
+
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\Processor::toArray()
+	 */
+	public function testToArray()
+	{
+		$processorConfig = new ProcessorConfig([
+			'settingOne' => 'fld1',
+			'settingTwo' => 'Hats',
+		]);
+		$form = $this->getFormArrayLike();
+		$processor = new class(
+			new ProcessorMeta(['label' => 'Send an sms']),
+			$processorConfig,
+			$form,
+			[]) extends Processor
+		{
+			public function getProcessorType(): string
+			{
+				return 'testType';
+			}
+		};
+		$this->assertSame('testType', $processor->toArray()[ 'type' ]);
+		$this->assertSame([
+			'settingOne' => 'fld1',
+			'settingTwo' => 'Hats',
+		], $processor->toArray()[ 'config' ]);
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\Processor::toArray()
+	 * @covers \calderawp\caldera\Forms\Processing\Processor::fromArray()
+	 */
+	public function testFromArrayTest()
+	{
+		$array = [
+			'label' => 'The Label',
+			'type' => 'testType',
+			'config' =>
+				[
+					'settingOne' => 'fld1',
+					'settingTwo' => 'Hats',
+				]
+		];
+		$this->assertEquals($array, Processor::fromArray($array)->toArray());
 	}
 }

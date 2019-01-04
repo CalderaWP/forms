@@ -35,4 +35,34 @@ class ProcessorCollectionTest extends TestCase
 		$processors->addProcessor($processorOne);
 		$this->assertAttributeCount(1, 'items', $processors);
 	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\ProcessorCollection::fromArray()
+	 * @covers \calderawp\caldera\Forms\Processing\ProcessorCollection::toArray()
+	 */
+	public function testToFromArray()
+	{
+		$array = [
+			[
+				'label' => 'The Label',
+				'type' => 'testType',
+				'config' =>
+					[
+						'settingOne' => 'fld1',
+						'settingTwo' => 'Hats',
+					]
+			],
+			[
+				'label' => 'The Second label',
+				'type' => 'testType',
+				'config' =>
+					[
+						'settingOne' => 'fld1',
+						'settingTwo' => 'Hats',
+					]
+			]
+		];
+		$processors = ProcessorCollection::fromArray($array);
+		$this->assertSame($array, $processors->toArray());
+	}
 }

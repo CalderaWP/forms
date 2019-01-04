@@ -9,7 +9,7 @@ use calderawp\interop\Contracts\UpdateableFormFieldsContract as FormFields;
 
 use calderawp\interop\Contracts\ProcessorContract;
 
-abstract class Processor implements ProcessorContract
+class Processor implements ProcessorContract
 {
 
 	const PRE_PROCESS = 'preProcessStage1';
@@ -24,18 +24,46 @@ abstract class Processor implements ProcessorContract
 	protected $processorConfig;
 
 	/**
-	 * @var array
+	 * @var ProcessorMeta
 	 */
 	protected $processorMeta;
 
 	/** @var FormArrayLike */
 	protected $form;
-	public function __construct(array $processorMeta, ProcessorConfig $processorConfig, FormArrayLike$form, array $callbacks = [])
+	public function __construct(ProcessorMeta $processorMeta, ProcessorConfig $processorConfig, ? FormArrayLike $form = null, array $callbacks = [])
 	{
 		$this->processorConfig = $processorConfig;
 		$this->callbacks = $callbacks;
 		$this->processorMeta = $processorMeta;
 		$this->form = $form;
+	}
+
+
+	public static function fromArray(array $item = []): ProcessorContract
+	{
+		$type = $item[ 'type'];
+		$label = ! empty($item['label']) ? $item[ 'label' ] : '';
+		$processorMeta = new ProcessorMeta([
+			'label' => $label,
+			'type' => $type
+		]);
+		$processorConfig = new ProcessorConfig(! empty($item['config']) ?  $item['config'] : []);
+		return new static(
+			$processorMeta,
+			$processorConfig
+		);
+	}
+
+	public function getLabel() : string
+	{
+		return ! empty($_label = $this->processorMeta->getLabel())
+		   ? $_label
+		   : $this->getProcessorType();
+	}
+
+	public function getProcessorType(): string
+	{
+		return $this->processorMeta->getType();
 	}
 
 	/**
@@ -77,6 +105,27 @@ abstract class Processor implements ProcessorContract
 	{
 		return $this->processorConfig;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function toArray() : array
+	{
+		return [
+			'label' => $this->getLabel(),
+			'type' => $this->getProcessorType(),
+			'config' => $this->getProcessorConfig()->toArray()
+		];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function jsonSerialize()
+	{
+		return $this->toArray();
+	}
+
 
 	/**
 	 * Find process dispatcher

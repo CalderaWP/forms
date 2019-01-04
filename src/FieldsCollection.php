@@ -85,6 +85,9 @@ class FieldsCollection extends Collection implements FieldCollectionInterface
 
 	public function hasField($idOrSlug): bool
 	{
+		if( empty( $this->items) ){
+			return false;
+		}
 		if (isset($this->items[ $idOrSlug ])) {
 			return true;
 		}

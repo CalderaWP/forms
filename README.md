@@ -105,7 +105,18 @@ $array = [
 						]
 					]
 				]
-			]
+			],
+			'processors' => [
+                [
+                    'label' => 'Main Message',
+                    'type' => 'testType',
+                    'config' =>
+                        [
+                            'fromName' => 'fld1',
+                            'fromEmail' => 'roy@hiroy.club',
+                        ]
+                ]
+            ]
 		];
 		$model = FormModel::fromArray($array);
 ```

@@ -3,6 +3,7 @@
 
 namespace calderawp\caldera\Forms;
 
+use calderawp\caldera\Forms\Processing\ProcessorCollection;
 use calderawp\caldera\Forms\Traits\PreparesFieldsFromArray;
 use calderawp\caldera\Forms\Contracts\FormModelContract;
 use calderawp\interop\Caldera;
@@ -30,10 +31,14 @@ class FormModel extends Caldera implements FormModelContract
 	{
 
 		$items = self::prepareFieldsFromArray($items);
+		if (isset($items['processors'])&& is_array($items['processors'])) {
+		$items['processors'] = ProcessorCollection::fromArray($items['processors']);
+		}
 		$obj = parent::fromArray($items);
 		if (isset($items['fields'])&&is_object($items['fields'])) {
 			$obj->setFields($items['fields']);
 		}
+
 		return $obj;
 	}
 

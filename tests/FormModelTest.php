@@ -107,6 +107,17 @@ class FormModelTest extends TestCase
 						]
 					]
 				]
+			],
+			'processors' => [
+				[
+					'label' => 'Main Message',
+					'type' => 'testType',
+					'config' =>
+						[
+							'fromName' => 'fld1',
+							'fromEmail' => 'roy@hiroy.club',
+						]
+				]
 			]
 		];
 
@@ -126,5 +137,44 @@ class FormModelTest extends TestCase
 		$model = new FormModel();
 		$model->setProcessors($processors);
 		$this->assertSame($processors, $model->getProcessors());
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\FormModel::fromArray()
+	 * @covers \calderawp\caldera\Forms\FormModel::setProcessors()
+	 */
+	public function testSetProcessorsFromArray(){
+		$array = [
+			'id' => 'cf1',
+			'fields' => [
+
+			],
+			'processors' => [
+				[
+					'label' => 'Main Message',
+					'type' => 'autoResponder',
+					'config' =>
+						[
+							'fromName' => 'fld1',
+							'fromEmail' => 'roy@hiroy.club',
+						]
+				],
+				[
+					'label' => 'Extra Message',
+					'type' => 'autoResponder',
+					'config' =>
+						[
+							'fromName' => 'fld1',
+							'fromEmail' => 'EXTREME_ENTRY@email.club',
+						]
+				]
+			]
+		];
+
+		$model = FormModel::fromArray($array);
+		$this->assertSame('cf1', $model->getId());
+		$this->assertTrue($model->getProcessors()->hasProcessorOfType('autoResponder'));
+		$this->assertCount(2, $model->toArray()['processors']);
+		$this->assertEquals($array['processors'], $model->toArray()['processors']);
 	}
 }
