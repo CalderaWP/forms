@@ -14,15 +14,15 @@ class ProcessorCollectionTest extends TestCase
 	public function testHasProcessorOfType()
 	{
 		$type = 'theType';
-		$processorOne = \Mockery::mock('Processor', Processor::class );
-		$processorOne->shouldReceive('getProcessorType' )->andReturn($type);
-		$processorTwo = \Mockery::mock('Processor', Processor::class );
-		$processorTwo->shouldReceive('getProcessorType' )->andReturn('notTheType');
+		$processorOne = \Mockery::mock('Processor', Processor::class);
+		$processorOne->shouldReceive('getProcessorType')->andReturn($type);
+		$processorTwo = \Mockery::mock('Processor', Processor::class);
+		$processorTwo->shouldReceive('getProcessorType')->andReturn('notTheType');
 		$processors = new ProcessorCollection();
 		$processors->addProcessor($processorTwo);
 		$processors->addProcessor($processorOne);
 		$this->assertTrue($processors->hasProcessorOfType($type));
-		$this->assertFalse($processors->hasProcessorOfType('ffaasd') );
+		$this->assertFalse($processors->hasProcessorOfType('ffaasd'));
 	}
 
 	/**
@@ -30,9 +30,9 @@ class ProcessorCollectionTest extends TestCase
 	 */
 	public function testAddProcessor()
 	{
-		$processorOne = \Mockery::mock('Processor', Processor::class );
+		$processorOne = \Mockery::mock('Processor', Processor::class);
 		$processors = new ProcessorCollection();
 		$processors->addProcessor($processorOne);
-		$this->assertAttributeCount(1,'items', $processors );
+		$this->assertAttributeCount(1, 'items', $processors);
 	}
 }

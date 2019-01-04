@@ -7,13 +7,18 @@ use calderawp\caldera\Forms\Traits\PreparesFieldsFromArray;
 use calderawp\caldera\Forms\Contracts\FormModelContract;
 use calderawp\interop\Caldera;
 use calderawp\interop\Contracts\Interoperable;
+use calderawp\interop\Contracts\ProvidesProcessors;
 use calderawp\interop\Contracts\Rest\RestResponseContract;
 use calderawp\interop\Traits\CalderaForms\ProvidesFields;
 use calderawp\interop\Traits\CalderaForms\ProvidesForm;
 
 class FormModel extends Caldera implements FormModelContract
 {
-	use ProvidesForm, ProvidesFields, PreparesFieldsFromArray;
+	use
+		ProvidesForm,
+		ProvidesFields,
+		ProvidesProcessors,
+		PreparesFieldsFromArray;
 
 
 	/**

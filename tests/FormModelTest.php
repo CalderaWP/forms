@@ -4,6 +4,8 @@ namespace calderawp\caldera\Forms\Tests;
 
 use calderawp\caldera\Forms\FieldModel;
 use calderawp\caldera\Forms\FormModel;
+use calderawp\caldera\Forms\Processing\Processor;
+use calderawp\caldera\Forms\Processing\ProcessorCollection;
 use calderawp\interop\Tests\TestCase;
 use calderawp\interop\Contracts\CalderaForms\HasField;
 use calderawp\interop\Contracts\CalderaForms\HasForm;
@@ -109,8 +111,20 @@ class FormModelTest extends TestCase
 		];
 
 		$model = FormModel::fromArray($array);
-		$this->assertSame('cf1', $model->getId() );
-		$this->assertTrue($model->getFields()->hasField('agreeToTerms' ));
-		$this->assertCount(2,$model->toArray()['fields']['agreeToTerms']['fieldConfig']['options']);
+		$this->assertSame('cf1', $model->getId());
+		$this->assertTrue($model->getFields()->hasField('agreeToTerms'));
+		$this->assertCount(2, $model->toArray()['fields']['agreeToTerms']['fieldConfig']['options']);
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\FormModel::getProcessors()
+	 * @covers \calderawp\caldera\Forms\FormModel::setProcessors()
+	 */
+	public function testGetSetProcessors()
+	{
+		$processors = \Mockery::mock('AutoResponder', ProcessorCollection::class);
+		$model = new FormModel();
+		$model->setProcessors($processors);
+		$this->assertSame($processors, $model->getProcessors());
 	}
 }

@@ -29,13 +29,13 @@ class FormArrayLikeTest extends TestCase
 
 		$formArray = FormArrayLike::fromModel($model);
 		$this->assertSame($fieldId, $formArray['fields'][$fieldId]['id']);
-
 	}
 
 	/**
 	 * @covers \calderawp\caldera\Forms\FormArrayLike::toArray()
 	 */
-	public function testToArray(){
+	public function testToArray()
+	{
 		$fieldId = 'fld1';
 		$field = FieldModel::fromArray(
 			[

@@ -19,8 +19,7 @@ class FormFieldsWithUpdateTest extends TestCase
 			'fld2' => 'two'
 		]);
 		$fields->setFieldUpdater([$fieldUpdater,'update']);
-		$this->assertTrue($fields->updateFieldValue('fld2', 2) );
-
+		$this->assertTrue($fields->updateFieldValue('fld2', 2));
 	}
 
 	public function testGetFieldValue()
@@ -30,8 +29,8 @@ class FormFieldsWithUpdateTest extends TestCase
 			'fld2' => 'two'
 		]);
 
-		$this->assertSame( 'two', $fields->getFieldValue('fld2') );
-		$this->assertSame( '1', $fields->getFieldValue('fld1') );
+		$this->assertSame('two', $fields->getFieldValue('fld2'));
+		$this->assertSame('1', $fields->getFieldValue('fld1'));
 	}
 
 	public function testGetFields()
@@ -40,22 +39,20 @@ class FormFieldsWithUpdateTest extends TestCase
 			'fld1' => '1',
 			'fld2' => 'two'
 		];
-		$fields = new FormFieldsWithUpdate($_fields );
-		$this->assertSame( $_fields, $fields->toArray() );
-
+		$fields = new FormFieldsWithUpdate($_fields);
+		$this->assertSame($_fields, $fields->toArray());
 	}
 
 	public function testSetFieldUpdater()
 	{
-		$fieldUpdater = function(){
-
+		$fieldUpdater = function () {
 		};
 		$fields = new FormFieldsWithUpdate([
 			'fld1' => '1',
 			'fld2' => 'two'
 		]);
 		$fields->setFieldUpdater($fieldUpdater);
-		$this->assertAttributeEquals($fieldUpdater, 'fieldUpdater', $fields );
+		$this->assertAttributeEquals($fieldUpdater, 'fieldUpdater', $fields);
 	}
 
 	public function testHasField()
@@ -64,7 +61,7 @@ class FormFieldsWithUpdateTest extends TestCase
 			'fld1' => '1',
 			'fld2' => 'two'
 		]);
-		$this->assertTrue( $fields->hasField('fld2' ) );
-		$this->assertFalse($fields->hasField('fddd' ));
+		$this->assertTrue($fields->hasField('fld2'));
+		$this->assertFalse($fields->hasField('fddd'));
 	}
 }

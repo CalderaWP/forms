@@ -35,8 +35,8 @@ class FieldOptionsTest extends TestCase
 			$this->optionTwo(),
 		];
 		$fieldOptions = FieldOptions::fromArray($opts);
-		$this->assertArrayHasKey( $opts[0]->getId(),$fieldOptions->toArray() );
-		$this->assertArrayHasKey( $opts[1]->getId(),$fieldOptions->toArray() );
+		$this->assertArrayHasKey($opts[0]->getId(), $fieldOptions->toArray());
+		$this->assertArrayHasKey($opts[1]->getId(), $fieldOptions->toArray());
 		$this->assertSame($opts[0]->toArray(), $fieldOptions->toArray()[$opts[0]->getId()]);
 		$this->assertSame($opts[1]->toArray(), $fieldOptions->toArray()[$opts[1]->getId()]);
 	}

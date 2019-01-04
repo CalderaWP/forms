@@ -12,7 +12,6 @@ use calderawp\caldera\Forms\Processing\Processor;
 use calderawp\caldera\Processing\ProcessCallback;
 use calderawp\caldera\restApi\Request;
 
-
 class ProcessorTest extends TestCase
 {
 
@@ -54,8 +53,6 @@ class ProcessorTest extends TestCase
 		};
 
 		$processor->postProcess($fields, $request);
-
-
 	}
 
 	public function noop()
