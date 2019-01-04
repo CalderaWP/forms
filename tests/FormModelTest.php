@@ -2,6 +2,7 @@
 
 namespace calderawp\caldera\Forms\Tests;
 
+use calderawp\caldera\Forms\FieldModel;
 use calderawp\caldera\Forms\FormModel;
 use calderawp\interop\Tests\TestCase;
 use calderawp\interop\Contracts\CalderaForms\HasField;
@@ -54,5 +55,62 @@ class FormModelTest extends TestCase
 		$this->assertEquals([], $array[ 'form' ]);
 		$this->assertEquals([], $array[ 'fields' ]);
 		$this->assertEquals([], $array[ 'settings' ]);
+	}
+
+
+	public function testFieldsFromArray()
+	{
+		$array = [
+			'id' => 'cf1',
+			'fields' => [
+				'name' => [
+					'id' => 'name',
+					'type' => 'input',
+					'label' => 'Your Name',
+					'required' => true,
+					'description' => 'Put your name here',
+					'config' => [
+						'html5type' => ''
+					]
+				],
+				'numberOfItems' => [
+					'id' => 'numberOfItems',
+					'type' => 'input',
+					'label' => 'Total',
+					'description' => 'How many items?',
+					'fieldConfig' => [
+						'html5type' => 'number',
+						'attributes' => [
+							'min' => 0,
+							'step' => 1
+						]
+					]
+				],
+				'agreeToTerms' => [
+					'id' => 'agreeToTerms',
+					'type' => 'select',
+					'label' => 'Agree to terms',
+					'description' => 'Compliance is mandatory',
+					'fieldConfig' => [
+						'multiple' => false,
+						'options' => [
+							[
+								'value' => true,
+								'label' => 'Yes'
+							],
+							[
+								'value' => false,
+								'label' => 'No'
+							]
+						]
+					]
+				]
+			]
+		];
+
+		$model = FormModel::fromArray($array);
+		$this->assertSame('cf1', $model->getId() );
+		$this->assertTrue($model->getFields()->hasField('agreeToTerms' ));
+		$this->assertCount(2,$model->toArray()['fields']['agreeToTerms']['fieldConfig']['options']);
 	}
 }

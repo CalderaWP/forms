@@ -36,7 +36,7 @@ class FieldModelTest extends TestCase
 		$this->assertEquals($default, $field->getValue($default));
 		$field->setValue($value);
 		$this->assertEquals($value, $field->getValue($value));
-		$this->assertEquals($value, $field->toArray()['value']);
+		$this->assertEquals($value, $field->toArray()[ 'value' ]);
 	}
 
 	/**
@@ -54,10 +54,88 @@ class FieldModelTest extends TestCase
 		$field->setDefault($default);
 		$field->setValue($value);
 		$array = $field->toArray();
-		$this->assertEquals($id, $array['id' ]);
-		$this->assertEquals($default, $array['default' ]);
-		$this->assertEquals($value, $array['value' ]);
-		$this->assertEquals($form->toArray(), $array['form' ]);
+		$this->assertEquals($id, $array[ 'id' ]);
+		$this->assertEquals($default, $array[ 'default' ]);
+		$this->assertEquals($value, $array[ 'value' ]);
+		$this->assertEquals($form->toArray(), $array[ 'form' ]);
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::toArray()
+	 */
+	public function testToArrayProvidesFieldConfigOptions()
+	{
+		$field = FieldModel::fromArray([
+			'id' => 'agreeToTerms',
+			'type' => 'select',
+			'label' => 'Agree to terms',
+			'description' => 'Compliance is mandatory',
+			'fieldConfig' => [
+				'multiple' => false,
+				'options' => [
+					[
+						'value' => true,
+						'label' => 'Yes',
+					],
+					[
+						'value' => false,
+						'label' => 'No',
+					],
+				],
+			],
+		]);
+		$this->assertCount(2, $field->toArray()[ 'fieldConfig' ][ 'options' ]);
+		$this->assertEquals(false, $field->toArray()[ 'fieldConfig' ][ 'multiple' ]);
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::toArray()
+	 */
+	public function testToArrayProvidesFieldConfigAttributes()
+	{
+		$field = FieldModel::fromArray([
+
+			'id' => 'test1',
+			'type' => 'input',
+			'html5type' => 'number',
+			'slug' => '',
+			'label' => '',
+			'description' => '',
+			'attributes' => [
+				'min' => 5,
+				'max' => 12,
+			],
+
+		]);
+		//[
+		//		'multiple' => false,
+		//		'buttonType' => 'submit',
+		//		'html5type' => 'text',
+		//		'attributes' => []
+		//	]
+		$this->assertCount(2, $field->toArray()[ 'fieldConfig' ][ 'attributes' ]);
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::toArray()
+	 */
+	public function testToArrayProvidesFieldConfigHtml5Type()
+	{
+		$field = FieldModel::fromArray([
+
+			'id' => 'test2',
+			'type' => 'input',
+			'html5type' => 'number',
+			'slug' => '',
+			'label' => '',
+			'description' => '',
+			'attributes' => [
+				'min' => 5,
+				'max' => 12,
+			],
+
+		]);
+		$this->assertSame('number', $field->toArray()[ 'fieldConfig' ][ 'html5type' ]);
 	}
 
 	/**
@@ -76,7 +154,7 @@ class FieldModelTest extends TestCase
 				'id' => $id,
 				'value' => $value,
 				'slug' => $slug,
-				'default' => $default
+				'default' => $default,
 			]
 		);
 		$this->assertEquals($slug, $field->getSlug());
@@ -132,7 +210,8 @@ class FieldModelTest extends TestCase
 
 		$arrayed = $field->toArray();
 		$this->assertArrayHasKey('fieldConfig', $arrayed);
-		$this->assertEquals($config->toArray(), $arrayed['fieldConfig']);
+		$this->assertEquals($config->toArray(), $arrayed[ 'fieldConfig' ]);
+		$this->assertCount(1, $arrayed[ 'fieldConfig' ][ 'options' ]);
 	}
 
 	/**
@@ -149,34 +228,37 @@ class FieldModelTest extends TestCase
 		$this->assertEquals('select', $field->getType());
 
 		$field = FieldModel::fromArray([
-			'type' => 'select'
+			'type' => 'select',
 		]);
 		$this->assertEquals('select', $field->getType());
-		$this->assertEquals('select', $field->toArray()['type']);
+		$this->assertEquals('select', $field->toArray()[ 'type' ]);
 	}
 
+	/**
+	 * @covers \calderawp\caldera\Forms\FieldModel::fromArray()
+	 */
 	public function testSetFieldConfigFromArray()
 	{
 		$options = [
 			[
 				'label' => 'Yes',
-				'value' => true
+				'value' => true,
 			],
 			[
 				'label' => 'No',
-				'value' => false
-			]
+				'value' => false,
+			],
 		];
 		/** @var FieldModel $field */
 		$field = FieldModel::fromArray([
 			'type' => 'select',
 			'fieldConfig' => [
-				'options' => $options
-			]
+				'options' => $options,
+			],
 		]);
 		$array = $field->toArray();
 		$this->assertEquals('select', $field->getType());
-		$this->assertEquals('select', $array['type']);
+		$this->assertEquals('select', $array[ 'type' ]);
 		$this->assertCount(2, $field->getFieldConfig()->getOptions()->toArray());
 		$this->assertEquals('No', $field->getFieldConfig()->getOptions()->getOption('no')->getLabel());
 	}

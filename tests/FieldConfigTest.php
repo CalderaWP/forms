@@ -41,6 +41,8 @@ class FieldConfigTest extends TestCase
 		$this->assertSame('No', $config->getOptions()->getOption('no')->getLabel());
 		$this->assertSame('no', $config->getOptions()->getOption('no')->getId());
 		$this->assertSame('yes', $config->getOptions()->getOption('yes')->getId());
+		$this->assertArrayHasKey( 'options', $config->toArray());
+		$this->assertCount( 2, $config->toArray()['options']);
 	}
 
 	/**
@@ -55,6 +57,9 @@ class FieldConfigTest extends TestCase
 		];
 		$fieldConfig = FieldConfig::fromArray($fieldArray);
 		$this->assertEquals('next', $fieldConfig->getOtherConfigOption('buttonType'));
+		$this->assertArrayHasKey( 'buttonType', $fieldConfig->toArray());
+		$this->assertSame( 'next', $fieldConfig->toArray()['buttonType' ] );
+
 	}
 
 	/**
@@ -70,6 +75,8 @@ class FieldConfigTest extends TestCase
 
 		$fieldConfig = FieldConfig::fromArray($fieldArray);
 		$this->assertEquals('email', $fieldConfig->getOtherConfigOption('html5type'));
+		$this->assertArrayHasKey( 'html5type', $fieldConfig->toArray());
+		$this->assertSame( 'email', $fieldConfig->toArray()['html5type' ] );
 	}
 	/**
 	 * @covers \calderawp\caldera\Forms\Field\FieldConfig::setOtherConfigOption()
@@ -78,17 +85,17 @@ class FieldConfigTest extends TestCase
 	 */
 	public function testAllowsAttributes()
 	{
+		$attributes = [
+			'min' => 5,
+			'max' => 12
+		];
 		$fieldArray = [
-			'attributes' => [
-				'min' => 5,
-				'max' => 12
-			],
+			'attributes' => $attributes,
 		];
 
 		$fieldConfig = FieldConfig::fromArray($fieldArray);
-		$this->assertEquals([
-			'min' => 5,
-			'max' => 12
-		], $fieldConfig->getOtherConfigOption('attributes'));
+		$this->assertEquals($attributes, $fieldConfig->getOtherConfigOption('attributes'));
+		$this->assertSame($attributes, $fieldConfig->toArray()['attributes']);
+
 	}
 }

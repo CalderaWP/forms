@@ -34,7 +34,6 @@ class FieldModel extends Model implements FieldModelContract
 		return is_string($this->type) ? $this->type : 'text';
 	}
 
-
 	/** @inheritdoc */
 	public function getSlug(): string
 	{
@@ -53,7 +52,15 @@ class FieldModel extends Model implements FieldModelContract
 			$items['fieldConfig'] = FieldConfig::fromArray($items['fieldConfig']);
 		}
 
-		return parent::fromArray($items);
+		/** @var FieldModel $obj */
+		$obj = parent::fromArray($items);
+		if (isset($items[ 'html5type' ])) {
+			$obj->getFieldConfig()->setOtherConfigOption('html5type', $items['html5type']);
+		}
+		if (isset($items[ 'attributes' ])) {
+			$obj->getFieldConfig()->setOtherConfigOption('attributes', $items['attributes']);
+		}
+		return $obj;
 	}
 
 	public function getFieldConfig(): FieldConfig

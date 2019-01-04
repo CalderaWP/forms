@@ -9,14 +9,14 @@ use calderawp\interop\Collection;
 
 use calderawp\interop\Traits\ItemsIterator;
 
-class ProcessorCollection  extends Collection implements ProcessorCollectionContract
+class ProcessorCollection extends Collection implements ProcessorCollectionContract
 {
 
 	use ItemsIterator;
 
 
 	/** @inheritdoc */
-	public function addProcessor( Processor $processor ) : ProcessorCollectionContract
+	public function addProcessor(Processor $processor) : ProcessorCollectionContract
 	{
 		$this->items[] = $processor;
 		return $this;
@@ -27,16 +27,14 @@ class ProcessorCollection  extends Collection implements ProcessorCollectionCont
 		return 'addProcessor';
 	}
 
-	public function hasProcessorOfType(string  $processorType ): bool
+	public function hasProcessorOfType(string  $processorType): bool
 	{
 		/** @var Processor $processor */
-		foreach ($this->items as $processor){
-			if( $processorType === $processor->getProcessorType()){
+		foreach ($this->items as $processor) {
+			if ($processorType === $processor->getProcessorType()) {
 				return true;
 			}
 		}
 		return false;
 	}
-
-
 }

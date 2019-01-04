@@ -26,6 +26,22 @@ class FieldOptionsTest extends TestCase
 	}
 
 	/**
+	 * @covers \calderawp\caldera\Forms\Field\FieldOptions::toArray();
+	 */
+	public function testToArray()
+	{
+		$opts = [
+			$this->optionOne(),
+			$this->optionTwo(),
+		];
+		$fieldOptions = FieldOptions::fromArray($opts);
+		$this->assertArrayHasKey( $opts[0]->getId(),$fieldOptions->toArray() );
+		$this->assertArrayHasKey( $opts[1]->getId(),$fieldOptions->toArray() );
+		$this->assertSame($opts[0]->toArray(), $fieldOptions->toArray()[$opts[0]->getId()]);
+		$this->assertSame($opts[1]->toArray(), $fieldOptions->toArray()[$opts[1]->getId()]);
+	}
+
+	/**
 	 * @covers \calderawp\caldera\Forms\Field\FieldOptions::removeOption();
 	 * @covers \calderawp\caldera\Forms\Field\FieldOptions::hasOption();
 	 */

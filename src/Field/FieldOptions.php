@@ -24,6 +24,9 @@ class FieldOptions
 	}
 	public function toArray() : array
 	{
+		if (empty($this->items)) {
+			return [];
+		}
 		$array = [];
 		foreach ($this->items as $item) {
 			$array[$item->getId()]= $item->toArray();

@@ -12,6 +12,7 @@ class FieldConfig
 	protected $options;
 
 	protected $otherConfigOptions = [
+		'multiple' => false,
 		'buttonType' => 'submit',
 		'html5type' => 'text',
 		'attributes' => []
@@ -89,13 +90,9 @@ class FieldConfig
 
 	public function toArray(): array
 	{
-		$array = [];
-		/** @var FieldOption $option */
-		foreach ($this->getOptions() as $option) {
-			$array[] = $option->toArray();
-		}
-
-		return $array;
+		return array_merge([
+			'options' => $this->getOptions()->toArray()
+		], $this->otherConfigOptions);
 	}
 
 	/**
