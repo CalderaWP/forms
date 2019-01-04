@@ -32,7 +32,7 @@ class FormModel extends Caldera implements FormModelContract
 
 		$items = self::prepareFieldsFromArray($items);
 		if (isset($items['processors'])&& is_array($items['processors'])) {
-		$items['processors'] = ProcessorCollection::fromArray($items['processors']);
+			$items['processors'] = ProcessorCollection::fromArray($items['processors']);
 		}
 		$obj = parent::fromArray($items);
 		if (isset($items['fields'])&&is_object($items['fields'])) {
