@@ -11,8 +11,9 @@ use calderawp\caldera\Forms\FormsCollection;
 use calderawp\caldera\Forms\Tests\EntryTest;
 use calderawp\caldera\Forms\Traits\AddsEntryValuesFromRequest;
 use calderawp\caldera\restApi\Controller;
+use calderawp\caldera\restApi\Response;
 use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
-use calderawp\interop\Contracts\Rest\RestResponseContract as Response;
+use calderawp\interop\Contracts\Rest\RestResponseContract as ResponseContract;
 use calderawp\caldera\Forms\Contracts\EntryCollectionContract as Entries;
 use calderawp\caldera\Forms\Contracts\EntryContract as Entry;
 
@@ -89,11 +90,13 @@ class EntryController extends CalderaFormsController
 	 *
 	 * @param Entry $entry
 	 *
-	 * @return Response
+	 * @return ResponseContract
 	 */
-	public function entryToResponse(Entry $entry): Response
+	public function entryToResponse(Entry $entry): ResponseContract
 	{
-		return $entry->toResponse();
+		$entryData = $entry->toArray();
+		unset( $entryData['userId']);
+		return (new Response())->setData($entryData);
 	}
 
 
@@ -122,9 +125,9 @@ class EntryController extends CalderaFormsController
 	 *
 	 * @param Entries $entries
 	 *
-	 * @return Response
+	 * @return ResponseContract
 	 */
-	public function entriesToResponse(Entries $entries): Response
+	public function entriesToResponse(Entries $entries): ResponseContract
 	{
 		return $entries->toResponse();
 	}

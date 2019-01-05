@@ -94,7 +94,21 @@ class EntryControllerTest extends TestCase
 		$formId = 'cf1';
 		$entry = Entry::fromArray(['id' => 1, 'formId' => $formId ]);
 		$controller = new EntryController($calderaForms);
-		$this->assertEquals($entry->toArray(), $controller->entryToResponse($entry)->getData());
+		$array = $entry->toArray();
+		unset( $array['userId' ]);
+		$this->assertEquals($array, $controller->entryToResponse($entry)->getData());
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Controllers\EntryController::entryToResponse()
+	 */
+	public function testEntryToResponseNotReturnsUserId()
+	{
+		$calderaForms = $this->calderaForms();
+		$formId = 'cf1';
+		$entry = Entry::fromArray(['id' => 1, 'formId' => $formId, 'userId' => 112 ]);
+		$controller = new EntryController($calderaForms);
+		$this->assertArrayNotHasKey('userId', $controller->entryToResponse($entry)->getData() );
 	}
 	/**
 	 * @covers \calderawp\caldera\Forms\Controllers\EntryController::createEntry()
