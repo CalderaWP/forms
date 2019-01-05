@@ -95,7 +95,7 @@ class EntryControllerTest extends TestCase
 		$entry = Entry::fromArray(['id' => 1, 'formId' => $formId ]);
 		$controller = new EntryController($calderaForms);
 		$array = $entry->toArray();
-		unset( $array['userId' ]);
+		unset($array['userId' ]);
 		$this->assertEquals($array, $controller->entryToResponse($entry)->getData());
 	}
 
@@ -108,7 +108,7 @@ class EntryControllerTest extends TestCase
 		$formId = 'cf1';
 		$entry = Entry::fromArray(['id' => 1, 'formId' => $formId, 'userId' => 112 ]);
 		$controller = new EntryController($calderaForms);
-		$this->assertArrayNotHasKey('userId', $controller->entryToResponse($entry)->getData() );
+		$this->assertArrayNotHasKey('userId', $controller->entryToResponse($entry)->getData());
 	}
 	/**
 	 * @covers \calderawp\caldera\Forms\Controllers\EntryController::createEntry()

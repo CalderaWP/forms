@@ -143,7 +143,8 @@ class FormModelTest extends TestCase
 	 * @covers \calderawp\caldera\Forms\FormModel::fromArray()
 	 * @covers \calderawp\caldera\Forms\FormModel::setProcessors()
 	 */
-	public function testSetProcessorsFromArray(){
+	public function testSetProcessorsFromArray()
+	{
 		$array = [
 			'id' => 'cf1',
 			'fields' => [

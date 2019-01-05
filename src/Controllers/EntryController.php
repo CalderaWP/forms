@@ -95,7 +95,7 @@ class EntryController extends CalderaFormsController
 	public function entryToResponse(Entry $entry): ResponseContract
 	{
 		$entryData = $entry->toArray();
-		unset( $entryData['userId']);
+		unset($entryData['userId']);
 		return (new Response())->setData($entryData);
 	}
 
