@@ -25,11 +25,16 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "calderawp\\caldera\\Forms\\Tests\\": "tests"
+      "calderawp\\caldera\\Forms\\Tests\\": "tests-unit",
+      "calderawp\\caldera\\Forms\\Tests\\Integration\\": "tests-integration"
     }
   },
   "scripts": {
-    "test": "phpunit tests",
+    "test": "composer test:unit",
+    "tests": "composer test:unit && && composer test:integration && composer test:acceptance",
+    "test:unit": "phpunit --testsuite=Unit",
+    "test:integration": "phpunit --testsuite=Integration",
+    "test:acceptance": "ffphpunit --testsuite=Acceptance",
     "tests-now": "phpunit tests --group=now",
     "sniffs": "phpcs src/ && phpcs src/",
     "fixes": "phpcbf src/ && phpcbf tests/"
