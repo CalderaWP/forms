@@ -3,14 +3,14 @@
 namespace calderawp\caldera\Forms\Tests\Processing;
 
 use calderawp\caldera\Forms\FieldModel;
+use calderawp\caldera\Forms\FieldsArrayLike;
 use calderawp\caldera\Forms\FormArrayLike;
 use calderawp\caldera\Forms\FormModel;
-use calderawp\caldera\Forms\Processing\FormFieldsWithUpdate;
 use calderawp\caldera\Forms\Processing\ProcessorConfig;
 use calderawp\caldera\Forms\Processing\ProcessorMeta;
 use calderawp\caldera\Forms\Tests\TestCase;
 use calderawp\caldera\Forms\Processing\Processor;
-use calderawp\caldera\Processing\ProcessCallback;
+use calderawp\caldera\Forms\Processing\ProcessCallback;
 use calderawp\caldera\restApi\Request;
 
 class ProcessorTest extends TestCase
@@ -27,7 +27,7 @@ class ProcessorTest extends TestCase
 	 */
 	public function testPostProcess()
 	{
-		$fields = new FormFieldsWithUpdate([
+		$fields = new FieldsArrayLike([
 			'fld1' => 7,
 		]);
 		$processorConfig = new ProcessorConfig([
@@ -72,7 +72,7 @@ class ProcessorTest extends TestCase
 	 */
 	public function testPreProcess()
 	{
-		$fields = new FormFieldsWithUpdate([
+		$fields = new FieldsArrayLike([
 			'fld1' => 7,
 		]);
 		$processorConfig = new ProcessorConfig([
@@ -131,7 +131,7 @@ class ProcessorTest extends TestCase
 	 */
 	public function testMainProcess()
 	{
-		$fields = new FormFieldsWithUpdate([
+		$fields = new FieldsArrayLike([
 			'fld1' => 7,
 		]);
 		$processorConfig = new ProcessorConfig([

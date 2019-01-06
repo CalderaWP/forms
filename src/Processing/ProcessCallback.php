@@ -4,7 +4,7 @@
 namespace calderawp\caldera\Forms\Processing;
 
 use calderawp\caldera\Forms\FormArrayLike;
-use calderawp\interop\Contracts\UpdateableFormFieldsContract as FormFields;
+use calderawp\interop\Contracts\FieldsArrayLike as FormFields;
 use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 use calderawp\interop\Contracts\ProcessorContract;
 

@@ -52,4 +52,5 @@ class FormModel extends Caldera implements FormModelContract
 	{
 		return parent::toArray();
 	}
+
 }

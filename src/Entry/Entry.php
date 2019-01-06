@@ -7,6 +7,8 @@ use calderawp\caldera\Forms\Contracts\EntryContract;
 use calderawp\caldera\Forms\EntryCollection;
 use calderawp\caldera\Forms\FormModel;
 use calderawp\caldera\restApi\Response;
+use calderawp\interop\Contracts\FieldsArrayLike;
+use calderawp\interop\Contracts\FormArrayLike;
 use calderawp\interop\Contracts\Rest\RestRequestContract;
 use calderawp\interop\Contracts\Rest\RestResponseContract;
 use calderawp\interop\Traits\ProvidesIdGeneric;
@@ -223,4 +225,11 @@ class Entry implements EntryContract
 		}
 		return $values;
 	}
+
+	public function getFieldsAsArrayLike(): FieldsArrayLike
+	{
+		return new \calderawp\caldera\Forms\FieldsArrayLike($this->getEntryValues()->toArray());
+	}
+
+
 }

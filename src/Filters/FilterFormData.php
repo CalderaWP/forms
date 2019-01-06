@@ -9,13 +9,5 @@ use calderawp\interop\Traits\ProvidesFormsDataSource;
 
 abstract class FilterFormData implements FiltersDataSource
 {
-	use ProvidesFormsDataSource;
-	/** @var FormsDataSources */
-	protected $dataSources;
 
-
-	public function __construct(FormsDataSources $dataSources)
-	{
-		$this->dataSources = $dataSources;
-	}
 }

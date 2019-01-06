@@ -3,6 +3,7 @@
 
 namespace calderawp\caldera\Forms;
 
+use calderawp\caldera\Forms\Filters\ProcessSubmissionFilters;
 use calderawp\caldera\Forms\Forms\ContactForm;
 use calderawp\CalderaContainers\Service\Container as ServiceContainer;
 use calderawp\interop\Contracts\CalderaModule;
@@ -33,15 +34,34 @@ class CalderaForms extends Module implements CalderaFormsContract
 	 */
 	public function registerServices(ServiceContainer $container): CalderaModule
 	{
+		//Create form collection
 		$container->singleton(FormsCollectionContract::class, function () {
 			return (new FormsCollection())->addForm(new ContactForm());
 		});
 
+		//Create entry collection
 		$container->singleton(EntryCollectionContract::class, function () {
 			return (new EntryCollection());
 		});
 
+		$this->addHooks();
+
 		return $this;
+	}
+
+	/**
+	 * Setup filters/actions
+	 */
+	protected function addHooks()
+	{
+		//Setup form processing
+		$filters = $this
+			->getCore()
+			->getEvents()
+			->getHooks();
+		(new ProcessSubmissionFilters() )
+			->addHooks($filters);
+
 	}
 
 	/** @inheritdoc */

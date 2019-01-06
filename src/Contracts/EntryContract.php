@@ -5,9 +5,12 @@ namespace calderawp\caldera\Forms\Contracts;
 
 use calderawp\caldera\Forms\Entry\EntryValue;
 use calderawp\caldera\Forms\Entry\EntryValues;
+use \calderawp\interop\Contracts\FieldsArrayLike;
+use \calderawp\interop\Contracts\FormArrayLike;
 use calderawp\interop\Contracts\ConvertsToResponse;
 use calderawp\interop\Contracts\HasId;
 use calderawp\interop\Contracts\Arrayable;
+
 
 interface EntryContract extends HasId, Arrayable, ConvertsToResponse
 {
@@ -58,4 +61,14 @@ interface EntryContract extends HasId, Arrayable, ConvertsToResponse
 	 * @return array
 	 */
 	public function valuesToArray() : array;
+
+
+	/**
+	 * Get entry values as a FieldsArrayLike
+	 *
+	 * @return FieldsArrayLike
+	 */
+	public function getFieldsAsArrayLike(): FieldsArrayLike;
+
+
 }
