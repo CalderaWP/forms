@@ -3,14 +3,10 @@
 
 namespace calderawp\caldera\Forms\Controllers;
 
-use calderawp\caldera\Forms\Entry\EntryValue;
-use calderawp\caldera\Forms\Entry\EntryValues;
 use calderawp\caldera\Forms\Exception;
 use calderawp\caldera\Forms\FormModel;
-use calderawp\caldera\Forms\FormsCollection;
-use calderawp\caldera\Forms\Tests\EntryTest;
+
 use calderawp\caldera\Forms\Traits\AddsEntryValuesFromRequest;
-use calderawp\caldera\restApi\Controller;
 use calderawp\caldera\restApi\Response;
 use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 use calderawp\interop\Contracts\Rest\RestResponseContract as ResponseContract;
@@ -60,20 +56,23 @@ class EntryController extends CalderaFormsController
 	 */
 	public function createEntry(?Entry $entry, Request $request) : Entry
 	{
-		$entry = $this->applyBeforeFilter(__FUNCTION__, $entry, $request);
+		$formId = $this->getFormIdFromRequest($request);
+		if (! $formId) {
+			throw new Exception('Form id not provided', 500);
+		}
+		try {
+			$form = $this->getForm($formId);
+		} catch (Exception $e) {
+			throw $e;
+		} catch (\calderawp\interop\Exception $e) {
+			throw $e;
+		}
+		$entry = $this->applyBeforeFilter(__FUNCTION__, $entry, $request, $form);
 		if (is_a($entry, Entry::class)) {
 			return $entry;
 		}
 
 		try {
-			$formId = $request->getParam('formId');
-			try {
-				$forms = $this->calderaForms->findForm('id', $formId);
-				/** @var FormModel $form */
-				$form = $forms->getForm($formId);
-			} catch (Exception $e) {
-				throw $e;
-			}
 			$entry = new \calderawp\caldera\Forms\Entry\Entry();
 			$entry->setFormId($formId);
 			$entry = $this->addEntryValues($entry, $request, $form);
@@ -130,5 +129,37 @@ class EntryController extends CalderaFormsController
 	public function entriesToResponse(Entries $entries): ResponseContract
 	{
 		return $entries->toResponse();
+	}
+
+	/**
+	 * @param Request $request
+	 *
+	 * @return string
+	 */
+	protected function getFormIdFromRequest(Request $request): string
+	{
+		$formId = $request->getParam('formId')
+			? $request->getParam('formId')
+			: '';
+		return $formId;
+	}
+
+	/**
+	 * @param $formId
+	 *
+	 * @return array
+	 * @throws Exception
+	 * @throws \calderawp\interop\Exception
+	 */
+	protected function getForm($formId): FormModel
+	{
+		try {
+			$forms = $this->calderaForms->findForm('id', $formId);
+			/** @var FormModel $form */
+			$form = $forms->getForm($formId);
+			return $form;
+		} catch (\calderawp\interop\Exception $e) {
+			throw $e;
+		}
 	}
 }

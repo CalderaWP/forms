@@ -179,18 +179,44 @@ class EntryControllerTest extends TestCase
 		$value = null;
 		$calderaForms = $this->calderaForms();
 		$controller = new EntryController($calderaForms);
-
+		$request = (new MockRequest())
+			->setParam('formId', 'contact-form');
 		$controller->addFilter("caldera/forms/createEntry", function () use ($expectedEntry) {
 			return $expectedEntry;
 		});
-		$this->assertSame($expectedEntry, $controller->createEntry(null, new MockRequest()));
+		$this->assertSame($expectedEntry, $controller->createEntry(null, $request));
 		$controller->addFilter("caldera/forms/getEntry", function ($value) use ($expectedEntry2) {
 			return $expectedEntry2;
 		});
-		$this->assertSame($expectedEntry2, $controller->getEntry(null, new MockRequest()));
+		$this->assertSame($expectedEntry2, $controller->getEntry(null, $request));
 		$controller->addFilter("caldera/forms/getEntries", function () use ($expectedEntries) {
 			return $expectedEntries;
 		});
-		$this->assertSame($expectedEntries, $controller->getEntries(null, new MockRequest()));
+		$this->assertSame($expectedEntries, $controller->getEntries(null, $request));
+	}
+
+	/**
+	 * This should be in integration tests
+	 *
+	 * @covers \calderawp\caldera\Forms\Controllers\EntryController::getForm()
+	 * @covers \calderawp\caldera\Forms\Controllers\EntryController::getFormIdFromRequest()
+	 * @covers \calderawp\caldera\Forms\Controllers\EntryController::createEntry()
+	 * @covers \calderawp\caldera\Forms\Controllers\CalderaFormsController::applyBeforeFilter()
+	 */
+	public function testGetsForm()
+	{
+		$controller = new EntryController($this->calderaForms());
+
+		$results = new \stdClass();
+		$controller->addFilter("caldera/forms/createEntry", function ($entry, $request, FormModel $formModel) use ($results) {
+			$results->filterRan = true;
+			$results->formModel = $formModel;
+			return $entry;
+		}, 20, 3);
+		$request = (new MockRequest())
+			->setParam('formId', 'contact-form');
+		$controller->createEntry(null, $request);
+		$this->assertTrue($results->filterRan);
+		$this->assertInstanceOf(FormModel::class, $results->formModel);
 	}
 }
