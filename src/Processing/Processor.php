@@ -11,19 +11,50 @@ use calderawp\interop\Contracts\ProcessorContract;
 
 class Processor implements ProcessorContract
 {
-
+	/**
+	 * The name of the second stage of processing - the "pre-process" process.
+	 *
+	 * Also known as "validation processing"
+	 *
+	 * Runs after fields are validated.
+	 */
 	const PRE_PROCESS = 'preProcessStage1';
 
-	const PROCESS = 'mainProcessStage1';
+	/**
+	 * The name of the second stage of processing - the "main" process.
+	 *
+	 * Also known as "process"
+	 *
+	 * Runs after pre-processing, before saving entry data
+	 */
+	const MAIN_PROCESS = 'mainProcessStage1';
+
+	/**
+	 * The name of the third stage of processing - the "post-process" process.
+	 *
+	 * Also known as "post-process"
+	 *
+	 * Runs after after entry data is saved in the database
+	 */
 	const POST_PROCESS = 'postProcessStage1';
+
+	/**
+	 * Process callbacks of this processor
+	 *
+	 * @var callable[]
+	 */
 	protected $callbacks;
 
 	/**
+	 * Settings for this instance of the processor
+	 *
 	 * @var ProcessorConfig
 	 */
 	protected $processorConfig;
 
 	/**
+	 * Meta data for processors
+	 *
 	 * @var ProcessorMeta
 	 */
 	protected $processorMeta;
@@ -89,7 +120,7 @@ class Processor implements ProcessorContract
 	/** @inheritdoc */
 	public function mainProcess(FormFields $formFields, Request $request): FormFields
 	{
-		return $this->dispatch($formFields, $request, self::PROCESS);
+		return $this->dispatch($formFields, $request, self::MAIN_PROCESS);
 	}
 
 	/** @inheritdoc */

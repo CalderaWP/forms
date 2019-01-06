@@ -152,7 +152,7 @@ class ProcessorTest extends TestCase
 			$form,
 			[
 				Processor::PRE_PROCESS => [$this, 'noop'],
-				Processor::PROCESS => $processCallback,
+				Processor::MAIN_PROCESS => $processCallback,
 				Processor::POST_PROCESS => [$this, 'noop'],
 			]) extends Processor
 		{
