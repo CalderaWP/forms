@@ -61,7 +61,6 @@ class CalderaForms extends Module implements CalderaFormsContract
 			->getHooks();
 		(new ProcessSubmissionFilters() )
 			->addHooks($filters);
-
 	}
 
 	/** @inheritdoc */

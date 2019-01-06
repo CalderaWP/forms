@@ -65,4 +65,38 @@ class ProcessorCollectionTest extends TestCase
 		$processors = ProcessorCollection::fromArray($array);
 		$this->assertSame($array, $processors->toArray());
 	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\ProcessorCollection::getIterator()
+	 * @covers \calderawp\interop\Traits\ItemsIterator::getIterator()
+	 */
+	public function testIsIterator(){
+		$array = [
+			[
+				'label' => 'The Label',
+				'type' => 'testType',
+				'config' =>
+					[
+						'settingOne' => 'fld1',
+						'settingTwo' => 'Hats',
+					]
+			],
+			[
+				'label' => 'The Second label',
+				'type' => 'testType',
+				'config' =>
+					[
+						'settingOne' => 'fld1',
+						'settingTwo' => 'Hats',
+					]
+			]
+		];
+		$processors = ProcessorCollection::fromArray($array);
+
+		$this->assertTrue( is_iterable( $processors->getIterator() ));
+		$this->assertTrue( is_iterable( $processors ));
+		$this->assertFalse(empty($processors));
+
+
+	}
 }

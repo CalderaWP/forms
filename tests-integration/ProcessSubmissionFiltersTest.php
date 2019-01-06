@@ -3,6 +3,10 @@
 namespace calderawp\caldera\Forms\Tests\Integration;
 
 use calderawp\caldera\Forms\Controllers\EntryController;
+use calderawp\caldera\Forms\Entry\Entry;
+use calderawp\caldera\Forms\Entry\EntryValue;
+use calderawp\caldera\Forms\Entry\EntryValues;
+use calderawp\caldera\Forms\FieldModel;
 use calderawp\caldera\Forms\FieldsArrayLike;
 use calderawp\caldera\Forms\Filters\ProcessSubmissionFilters;
 use calderawp\caldera\Forms\FormArrayLike;
@@ -241,12 +245,20 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 			'settingOne' => 'firstName',
 			'settingTwo' => 'setting2',
 		]);
-		$processorMeta = new ProcessorMeta(['label' => 'Request an airship.']);
+		$type = 'zeplinrequester';
+		$processorMeta = new ProcessorMeta(['label' => 'Request an airship.', 'type' => $type]);
 
+		$formId = 'testPreProcessUpdatesRequestFORMID';
 		$form = FormModel::fromArray([
-			'formId' => 'form',
+			'id' => $formId,
 			'processors',
 		]);
+		$calderaForms = \caldera()->getCalderaForms();
+
+		$calderaForms
+			->getForms()
+			->addForm($form);
+
 		$formArrayLike = FormArrayLike::fromModel($form);
 		$callbackPre = new class($formArrayLike) extends ProcessCallback
 		{
@@ -267,11 +279,12 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 			]
 		);
 		$form->getProcessors()->addProcessor($processor);
+		$this->assertTrue($form->getProcessors()->hasProcessorOfType($type));
 		$request = (new MockRequest())
-			->setParam('formId', 'contact-form');
+			->setParam('formId', $formId);
 		$request->setParam('entryValues', $fields->toArray());
 
-		$controller = new EntryController($this->calderaForms());
+		$controller = new EntryController($calderaForms);
 		$entry = $controller->createEntry(null, $request);
 		$values = $entry->getEntryValues()->toArray();
 		$this->assertSame('pre-email', $request->getParam('email'));
@@ -285,11 +298,16 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 	 * @covers \calderawp\caldera\Forms\Filters\ProcessSubmissionFilters::process()
 	 * @covers \calderawp\caldera\Forms\Filters\ProcessSubmissionFilters::postProcess()
 	 */
-	public function testProcessAllWithFilters()
+	public function testMainProcessUpdatesEntry()
 	{
+
+		$fieldId1 = 'f1';
+		$fieldId2 = 'f2';
+
+
 		$fields = new FieldsArrayLike([
-			'firstName' => 'Roy',
-			'email' => 'roy@hiroy.club',
+			$fieldId1 => 'Roy',
+			$fieldId2 => 'roy@hiroy.club',
 		]);
 
 		$processorConfig = new ProcessorConfig([
@@ -298,16 +316,140 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 		]);
 		$processorMeta = new ProcessorMeta(['label' => 'Request an airship.']);
 
+		$formId = 'testProcessAllWithFiltersFORMID';
+
 		$form = FormModel::fromArray([
-			'formId' => 'form',
-			'processors',
+			'id' => $formId,
+			'fields' => [
+				FieldModel::fromArray(
+					[
+						'id' => $fieldId1,
+						'type' => 'input',
+					]
+				),
+				FieldModel::fromArray(
+					[
+						'id' => $fieldId2,
+						'type' => 'input',
+					]
+				),
+			],
 		]);
+
 		$formArrayLike = FormArrayLike::fromModel($form);
-		$callbackPre = new class($formArrayLike) extends ProcessCallback
+
+		$callbackMain = new class($formArrayLike) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
-				$formFields[ 'email' ] = 'pre';
+				$formFields['f1' ] = 'main';
+				$formFields['f2' ] = 'main';
+				return $formFields;
+			}
+		};
+
+		$processor = new Processor(
+			$processorMeta,
+			$processorConfig,
+			$formArrayLike,
+			[
+				Processor::MAIN_PROCESS => $callbackMain,
+			]
+		);
+		$form->getProcessors()->addProcessor($processor);
+		\caldera()->getCalderaForms()->getForms()->addForm($form);
+
+		$request = (new MockRequest())
+			->setParam('formId', $formId);
+		$controller = new EntryController(\caldera()->getCalderaForms());
+
+		$entryId1 = 11 + rand(2, 8);
+		$entryId2 = 22 + rand(10, 20);
+		$field = $this->field($fieldId1, [], $form);
+		$field2 = $this->field($fieldId2, [], $form);
+		$entryValue = (new EntryValue($form, $field))->setId($entryId1);
+		$entryValue2 = (new EntryValue($form, $field2))->setId($entryId2);
+
+
+		$request->setParam('entryValues', $fields->toArray());
+		$suppliedEntry = new Entry();
+		$entryValues = new EntryValues();
+		$entryValues->addValue($entryValue);
+		$entryValues->addValue($entryValue2);
+
+		$suppliedEntry->setEntryValues($entryValues);
+
+		$returnedEntry = $controller->createEntry($suppliedEntry, $request);
+		$values = $returnedEntry->getEntryValues()->toArray();
+		$this->assertIsArray($values);
+		$this->assertNotEmpty($values);
+		$tests = 0;
+		foreach ($returnedEntry->getEntryValues()->getValues() as $value ){
+			if( 'f1' === $value->getFieldId() ){
+				$this->assertSame( 'main', $value->getValue() );
+			}
+			if( 'f2' === $value->getFieldId() ){
+				$this->assertSame( 'main', $value->getValue() );
+			}
+			$tests++;
+		}
+		$this->assertSame(2,$tests);
+
+
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Filters\ProcessSubmissionFilters::addHooks()
+	 * @covers \calderawp\caldera\Forms\CalderaForms::registerServices()
+	 * @covers \calderawp\caldera\Forms\CalderaForms::addHooks()
+	 * @covers \calderawp\caldera\Forms\Filters\ProcessSubmissionFilters::preProcess()
+	 * @covers \calderawp\caldera\Forms\Filters\ProcessSubmissionFilters::process()
+	 * @covers \calderawp\caldera\Forms\Filters\ProcessSubmissionFilters::postProcess()
+	 */
+	public function testProcessAllWithFilters()
+	{
+
+		$fieldId1 = 'f1';
+		$fieldId2 = 'f2';
+
+
+		$fields = new FieldsArrayLike([
+			$fieldId1 => 'Roy',
+			$fieldId2 => 'roy@hiroy.club',
+		]);
+
+		$processorConfig = new ProcessorConfig([
+			'settingOne' => 'firstName',
+			'settingTwo' => 'setting2',
+		]);
+		$processorMeta = new ProcessorMeta(['label' => 'Request an airship.']);
+
+		$formId = 'testProcessAllWithFiltersFORMID';
+
+		$form = FormModel::fromArray([
+			'id' => $formId,
+			'fields' => [
+				FieldModel::fromArray(
+					[
+						'id' => $fieldId1,
+						'type' => 'input',
+					]
+				),
+				FieldModel::fromArray(
+					[
+						'id' => $fieldId2,
+						'type' => 'input',
+					]
+				),
+			],
+		]);
+
+		$formArrayLike = FormArrayLike::fromModel($form);
+		$callbackPre = new class($formArrayLike) extends ProcessCallback
+		{
+			public function process(FormFields $formFields, Request $request) : FormFields
+			{
+				$formFields['f1' ] = 'pre';
 				return $formFields;
 			}
 		};
@@ -315,7 +457,8 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
-				$formFields[ 'email' ] = 'main-email';
+				$formFields['f1' ] = 'main';
+				$formFields['f2' ] = 'setAtMainShouldGetResetByPost';
 				return $formFields;
 			}
 		};
@@ -323,8 +466,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
-				$formFields[ 'email' ] = 'post-email';
-				$formFields[ 'firstName' ] = 'post-firstName';
+				$formFields['f2' ] = 'post';
 				return $formFields;
 			}
 		};
@@ -339,14 +481,44 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 			]
 		);
 		$form->getProcessors()->addProcessor($processor);
-		$request = (new MockRequest())
-			->setParam('formId', 'contact-form');
-		$request->setParam('entryValues', $fields->toArray());
+		\caldera()->getCalderaForms()->getForms()->addForm($form);
 
-		$controller = new EntryController($this->calderaForms());
-		$entry = $controller->createEntry(null, $request);
-		$values = $entry->getEntryValues()->toArray();
-		$this->assertSame('post-email', $values['email']['value']);
-		$this->assertSame('post-firstName', $values['firstName']['value']);
+		$request = (new MockRequest())
+			->setParam('formId', $formId);
+		$controller = new EntryController(\caldera()->getCalderaForms());
+
+		$entryId1 = 11 + rand(2, 8);
+		$entryId2 = 22 + rand(10, 20);
+		$field = $this->field($fieldId1, [], $form);
+		$field2 = $this->field($fieldId2, [], $form);
+		$entryValue = (new EntryValue($form, $field))->setId($entryId1);
+		$entryValue2 = (new EntryValue($form, $field2))->setId($entryId2);
+
+
+		$request->setParam('entryValues', $fields->toArray());
+		$suppliedEntry = new Entry();
+		$entryValues = new EntryValues();
+		$entryValues->addValue($entryValue);
+		$entryValues->addValue($entryValue2);
+
+		$suppliedEntry->setEntryValues($entryValues);
+
+		$returnedEntry = $controller->createEntry($suppliedEntry, $request);
+		$values = $returnedEntry->getEntryValues()->toArray();
+		$this->assertIsArray($values);
+		$this->assertNotEmpty($values);
+		$tests = 0;
+		foreach ($returnedEntry->getEntryValues()->getValues() as $value ){
+			if( 'f1' === $value->getFieldId() ){
+				$this->assertSame( 'main', $value->getValue() );
+			}
+			if( 'f2' === $value->getFieldId() ){
+				$this->assertSame( 'post', $value->getValue() );
+			}
+			$tests++;
+		}
+		$this->assertSame(2,$tests);
+
+
 	}
 }

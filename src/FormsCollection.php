@@ -21,6 +21,18 @@ class FormsCollection extends Collection implements FormsCollectionContract
 	}
 
 	/**
+	 * Is item in collection?
+	 *
+	 * @param string $id
+	 *
+	 * @return bool
+	 */
+	public function has($id) : bool
+	{
+		return is_array($this->items) && array_key_exists($id, $this->items);
+	}
+
+	/**
 	 * @param Forms $forms
 	 *
 	 * @return Collection

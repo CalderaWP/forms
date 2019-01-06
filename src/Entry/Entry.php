@@ -226,10 +226,21 @@ class Entry implements EntryContract
 		return $values;
 	}
 
+	/**
+	 * @return FieldsArrayLike
+	 */
 	public function getFieldsAsArrayLike(): FieldsArrayLike
 	{
-		return new \calderawp\caldera\Forms\FieldsArrayLike($this->getEntryValues()->toArray());
+		$fields = new \calderawp\caldera\Forms\FieldsArrayLike($this->getEntryValues()->toArray());
+		if (empty($fields)) {
+			return new \calderawp\caldera\Forms\FieldsArrayLike([]);
+		}
+
+		$_fields = [];
+		foreach ($fields->toArray() as $field) {
+			$_fields[$field['fieldId']]=$field['value'];
+		}
+
+		return new \calderawp\caldera\Forms\FieldsArrayLike($_fields);
 	}
-
-
 }

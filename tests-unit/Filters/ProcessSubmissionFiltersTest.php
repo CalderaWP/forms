@@ -15,12 +15,16 @@ class ProcessSubmissionFiltersTest extends \calderawp\caldera\Forms\Tests\TestCa
 	 */
 	public function testPreProcess()
 	{
+		$processors = 		 \Mockery::mock('Processors', \calderawp\caldera\Forms\Processing\ProcessorCollection::class );
+		$processors->shouldReceive('toArray' )->andReturn([]);
 		$form = \Mockery::mock('Form', Form::class );
+		$form->shouldReceive( 'getProcessors' )
+			->andReturn( $processors);
 		$request = \Mockery::mock('Request', Request::class );
 		$entry = \Mockery::mock('Entry', Entry::class );
 		$dataSource = \Mockery::mock('DataSource', FormsDataSources::class );
 		$filterer = new ProcessSubmissionFilters($dataSource);
-		$this->assertInstanceOf( Entry::class, $filterer->preProcess($entry, $request,$form));
+		$this->assertSame( $entry, $filterer->preProcess($entry, $request,$form));
 
 	}
 
@@ -36,24 +40,30 @@ class ProcessSubmissionFiltersTest extends \calderawp\caldera\Forms\Tests\TestCa
 		$filterer = new ProcessSubmissionFilters($dataSource);
 		$this->assertInstanceOf( Entry::class, $filterer->validateFields($entry, $request,$form));
 	}
+
 	/**
-	 * @covers \calderawp\caldera\Forms\Filters\ProcessSubmissionFilters::addHooks()
-	 */
-	public function testAddHooks()
-	{
-		//Should be in integration tests
-	}
-	/**
-	 * @covers \calderawp\caldera\Forms\Filters\ProcessSubmissionFilters::process()
+	 * @covers \calderawp\caldera\Forms\Filters\ProcessSubmissionFilters::mainProcess()
 	 */
 	public function testProcess()
 	{
+		$processors = 		 \Mockery::mock('Processors', \calderawp\caldera\Forms\Processing\ProcessorCollection::class );
+		$processors->shouldReceive('toArray' )->andReturn([]);
+		$processors->shouldReceive('getIterator' )->andReturn(
+			 new \ArrayIterator([])
+		);
 		$form = \Mockery::mock('Form', Form::class );
+		$form->shouldReceive( 'getProcessors' )
+			->andReturn( $processors);
 		$request = \Mockery::mock('Request', Request::class );
+		$fieldsArrayLike = \Mockery::mock('Fields', \calderawp\caldera\Forms\FieldsArrayLike::class );
 		$entry = \Mockery::mock('Entry', Entry::class );
+		$entryValues = \Mockery::mock( 'EntryValues', \calderawp\caldera\Forms\Entry\EntryValues::class);
+		$entryValues->shouldReceive( 'getIterator' )->andReturn( new \ArrayIterator([]) );
+		$entry->shouldReceive( 'getEntryValues' )->andReturn($entryValues);
+		$entry->shouldReceive('getFieldsAsArrayLike' )->andReturn($fieldsArrayLike);
 		$dataSource = \Mockery::mock('DataSource', FormsDataSources::class );
 		$filterer = new ProcessSubmissionFilters($dataSource);
-		$this->assertInstanceOf( Entry::class, $filterer->process($entry, $request,$form));
+		$this->assertSame( $entry, $filterer->mainProcess($entry, $request,$form));
 	}
 
 	/**
@@ -61,11 +71,23 @@ class ProcessSubmissionFiltersTest extends \calderawp\caldera\Forms\Tests\TestCa
 	 */
 	public function testPostProcess()
 	{
+		$processors = 		 \Mockery::mock('Processors', \calderawp\caldera\Forms\Processing\ProcessorCollection::class );
+		$processors->shouldReceive('toArray' )->andReturn([]);
+		$processors->shouldReceive('getIterator' )->andReturn(
+			new \ArrayIterator([])
+		);
 		$form = \Mockery::mock('Form', Form::class );
+		$form->shouldReceive( 'getProcessors' )
+			->andReturn( $processors);
 		$request = \Mockery::mock('Request', Request::class );
+		$fieldsArrayLike = \Mockery::mock('Fields', \calderawp\caldera\Forms\FieldsArrayLike::class );
 		$entry = \Mockery::mock('Entry', Entry::class );
+		$entryValues = \Mockery::mock( 'EntryValues', \calderawp\caldera\Forms\Entry\EntryValues::class);
+		$entryValues->shouldReceive( 'getIterator' )->andReturn( new \ArrayIterator([]) );
+		$entry->shouldReceive( 'getEntryValues' )->andReturn($entryValues);
+		$entry->shouldReceive('getFieldsAsArrayLike' )->andReturn($fieldsArrayLike);
 		$dataSource = \Mockery::mock('DataSource', FormsDataSources::class );
 		$filterer = new ProcessSubmissionFilters($dataSource);
-		$this->assertInstanceOf( Entry::class, $filterer->postProcess($entry, $request,$form));
+		$this->assertSame( $entry, $filterer->postProcess($entry, $request,$form));
 	}
 }
