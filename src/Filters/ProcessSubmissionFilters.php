@@ -97,8 +97,7 @@ class ProcessSubmissionFilters extends FilterFormData implements \calderawp\cald
 			$formFields = $processor->preProcess($formFields, $request);
 		}
 
-
-		foreach ($formFields as $fieldId => $fieldValue) {
+		foreach ($formFields->toArray() as $fieldId => $fieldValue) {
 			$request->setParam($fieldId, $fieldValue);
 		}
 		return $entry;

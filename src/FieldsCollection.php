@@ -62,19 +62,30 @@ class FieldsCollection extends Collection implements FieldCollectionInterface
 	}
 
 
+	/**
+	 * Get a field from collection.
+	 *
+	 * Returns null if not found
+	 *
+	 * @param string|int $idOrSlug
+	 *
+	 * @return Field|null
+	 */
 	public function getField($idOrSlug): ?Field
 	{
-		if (isset($this->items[ $idOrSlug ])) {
-			return $this->items[$idOrSlug];
-		}
 
-		/**
-		 * @var int $itemIndex
-		 * @var FieldModel $item
-		 */
-		foreach ($this->items as $itemIndex => $item) {
-			if ($idOrSlug === $item->getSlug()) {
-				return $item;
+		if (! empty($this->items)) {
+			if (isset($this->items[ $idOrSlug ])) {
+				return $this->items[ $idOrSlug ];
+			}
+			/**
+			 * @var int $itemIndex
+			 * @var FieldModel $item
+			 */
+			foreach ($this->items as $itemIndex => $item) {
+				if ($idOrSlug === $item->getSlug()) {
+					return $item;
+				}
 			}
 		}
 
