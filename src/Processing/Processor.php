@@ -72,19 +72,38 @@ class Processor implements ProcessorContract
 	}
 
 
+	/**
+	 * Create an object from an array.
+	 *
+	 * @param array $item MUST include type. May include label and id and processor config (saved settings).
+	 *
+	 * @return ProcessorContract
+	 */
 	public static function fromArray(array $item = []): ProcessorContract
 	{
-		$type = $item[ 'type'];
+		$type = $item[ 'type' ];// do not add add a safety check for type here? - Josh?
 		$label = ! empty($item['label']) ? $item[ 'label' ] : '';
 		$processorMeta = new ProcessorMeta([
 			'label' => $label,
 			'type' => $type
 		]);
+
+		if (! empty($item['id'])) {
+			$processorMeta->setId($item['id']);
+		}
 		$processorConfig = new ProcessorConfig(! empty($item['config']) ?  $item['config'] : []);
 		return new static(
 			$processorMeta,
 			$processorConfig
 		);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getId() : string
+	{
+		return $this->processorMeta->getId();
 	}
 
 	public function getLabel() : string
@@ -145,6 +164,7 @@ class Processor implements ProcessorContract
 	public function toArray() : array
 	{
 		return [
+			'id' => $this->getId(),
 			'label' => $this->getLabel(),
 			'type' => $this->getProcessorType(),
 			'config' => $this->getProcessorConfig()->toArray()

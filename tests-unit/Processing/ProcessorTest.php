@@ -192,7 +192,7 @@ class ProcessorTest extends TestCase
 		]);
 		$form = $this->getFormArrayLike();
 		$processor = new class(
-			new ProcessorMeta(['label' => 'Send an sms']),
+			new ProcessorMeta(['label' => 'Send an sms', 'id' => 'theIdIsSalad']),
 			$processorConfig,
 			$form,
 			[]) extends Processor
@@ -207,6 +207,7 @@ class ProcessorTest extends TestCase
 			'settingOne' => 'fld1',
 			'settingTwo' => 'Hats',
 		], $processor->toArray()[ 'config' ]);
+		$this->assertEquals('theIdIsSalad', $processor->toArray()['id']);
 	}
 
 	/**
@@ -214,6 +215,25 @@ class ProcessorTest extends TestCase
 	 * @covers \calderawp\caldera\Forms\Processing\Processor::fromArray()
 	 */
 	public function testFromArrayTest()
+	{
+		$array = [
+			'id' => 'ff1',
+			'label' => 'The Label',
+			'type' => 'testType',
+			'config' =>
+				[
+					'settingOne' => 'fld1',
+					'settingTwo' => 'Hats',
+				]
+		];
+		$this->assertEquals($array, Processor::fromArray($array)->toArray());
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\Processor::toArray()
+	 * @covers \calderawp\caldera\Forms\Processing\Processor::getId()
+	 */
+	public function testFromArraySetsId()
 	{
 		$array = [
 			'label' => 'The Label',
@@ -224,7 +244,8 @@ class ProcessorTest extends TestCase
 					'settingTwo' => 'Hats',
 				]
 		];
-		$this->assertEquals($array, Processor::fromArray($array)->toArray());
+		$processor = Processor::fromArray($array);
+		$this->assertStringStartsWith('p', $processor->getId());
 	}
 
 	/**

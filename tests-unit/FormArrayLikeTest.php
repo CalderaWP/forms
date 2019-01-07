@@ -66,6 +66,7 @@ class FormArrayLikeTest extends TestCase
 			],
 			'processors' => [
 				[
+					'id' => 'infinityStone',
 					'label' => 'Extra Message',
 					'type' => 'autoResponder',
 					'config' =>
@@ -79,7 +80,7 @@ class FormArrayLikeTest extends TestCase
 
 		$model = FormModel::fromArray($array);
 		$arrayLike = FormArrayLike::fromModel($model);
-		$this->assertEquals('autoResponder',$arrayLike['processors'][0]['type']);
-		$this->assertEquals('x@e.com',$arrayLike['processors'][0]['config']['fromEmail']);
+		$this->assertEquals('autoResponder',$arrayLike['processors']['infinityStone']['type']);
+		$this->assertEquals('x@e.com',$arrayLike['processors']['infinityStone']['config']['fromEmail']);
 	}
 }

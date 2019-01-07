@@ -27,7 +27,7 @@ class FormModelTest extends IntegrationTestCase
 			'settingOne' => 'firstName',
 			'settingTwo' => 'setting2',
 		]);
-		$processorMeta = new ProcessorMeta(['label' => 'Request an airship.']);
+		$processorMeta = new ProcessorMeta(['label' => 'Request an airship.', 'id' => 'sevenL8']);
 
 		$form = FormModel::fromArray([
 			'formId' => 'form',
@@ -58,8 +58,8 @@ class FormModelTest extends IntegrationTestCase
 			'processors' => [$processor]
 		]);
 
-		$this->assertSame($processor->getLabel(), $form->getProcessors()->toArray()[0]['label']);
-		$this->assertSame($processor->getProcessorConfig()->toArray(), $form->getProcessors()->toArray()[0]['config']);
+		$this->assertSame($processor->getLabel(), $form->getProcessors()->toArray()['sevenL8']['label']);
+		$this->assertSame($processor->getProcessorConfig()->toArray(), $form->getProcessors()->toArray()['sevenL8']['config']);
 	}
 
 }

@@ -15,9 +15,12 @@ class ProcessorCollectionTest extends TestCase
 	{
 		$type = 'theType';
 		$processorOne = \Mockery::mock('Processor', Processor::class);
+		$processorOne->shouldReceive('getId' )->andReturn('g1');
 		$processorOne->shouldReceive('getProcessorType')->andReturn($type);
 		$processorTwo = \Mockery::mock('Processor', Processor::class);
 		$processorTwo->shouldReceive('getProcessorType')->andReturn('notTheType');
+		$processorTwo->shouldReceive('getId' )->andReturn('g2');
+
 		$processors = new ProcessorCollection();
 		$processors->addProcessor($processorTwo);
 		$processors->addProcessor($processorOne);
@@ -31,6 +34,7 @@ class ProcessorCollectionTest extends TestCase
 	public function testAddProcessor()
 	{
 		$processorOne = \Mockery::mock('Processor', Processor::class);
+		$processorOne->shouldReceive('getId' );
 		$processors = new ProcessorCollection();
 		$processors->addProcessor($processorOne);
 		$this->assertAttributeCount(1, 'items', $processors);
@@ -44,7 +48,8 @@ class ProcessorCollectionTest extends TestCase
 	{
 		$array = [
 			[
-				'label' => 'The Label',
+				'id' => 'a12',
+				'label' => 'Letters and Numbers',
 				'type' => 'testType',
 				'config' =>
 					[
@@ -53,7 +58,8 @@ class ProcessorCollectionTest extends TestCase
 					]
 			],
 			[
-				'label' => 'The Second label',
+				'id' => '1',
+				'label' => 'String number',
 				'type' => 'testType',
 				'config' =>
 					[
@@ -63,7 +69,7 @@ class ProcessorCollectionTest extends TestCase
 			]
 		];
 		$processors = ProcessorCollection::fromArray($array);
-		$this->assertSame($array, $processors->toArray());
+		$this->assertSame($array, array_values($processors->toArray()));
 	}
 
 	/**
@@ -101,10 +107,44 @@ class ProcessorCollectionTest extends TestCase
 	}
 
 	/**
+	 * @covers \calderawp\caldera\Forms\Processing\ProcessorCollection::getProcessor()
+	 */
+	public function testGetProcessor()
+	{
+		$id1 = 'aardvarkJourney';
+		$array = [
+			[
+				'id' => $id1,
+				'label' => 'The Label',
+				'type' => 'testType',
+				'config' =>
+					[
+						'settingOne' => 'fld1',
+						'settingTwo' => 'Hats',
+					]
+			],
+			[
+				'label' => 'The Second label',
+				'type' => 'testType',
+				'config' =>
+					[
+						'settingOne' => 'fld1',
+						'settingTwo' => 'Hats',
+					]
+			]
+		];
+		$processors = ProcessorCollection::fromArray($array);
+		$this->assertIsObject( $processors->getProcessor($id1) );
+		$this->assertNull($processors->getProcessor('EveryThingMattersBecauseNothingHasMeaning'));
+	}
+
+
+	/**
 	 * @covers \calderawp\caldera\Forms\Processing\ProcessorCollection::fromArray()
 	 */
 	public function testFromArray(){
 		$processorArray = [
+			'id' => 'season7Episode2',
 			'type' => 'apiRequest',
 			'label' => 'Test sending form data to test API',
 			'config' => [
@@ -121,6 +161,6 @@ class ProcessorCollectionTest extends TestCase
 
 		$this->assertTrue( $processors->hasProcessorOfType( 'apiRequest'));
 		$processorsToArray = $processors->toArray();
-		$this->assertSame($processorArray['config'],$processorsToArray[0]['config']);
+		$this->assertSame($processorArray['config'],$processorsToArray['season7Episode2']['config']);
 	}
 }

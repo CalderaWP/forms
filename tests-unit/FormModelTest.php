@@ -152,16 +152,18 @@ class FormModelTest extends TestCase
 			],
 			'processors' => [
 				[
-					'label' => 'Main Message',
+					'id' => 'infiniteTime',
+					'label' => 'Tell Someone That You Love Them',
 					'type' => 'autoResponder',
 					'config' =>
 						[
-							'fromName' => 'fld1',
-							'fromEmail' => 'roy@hiroy.club',
+							'fromName' => 'nameField',
+							'fromEmail' => 'emailField',
 						]
 				],
 				[
-					'label' => 'Extra Message',
+					'id' => 'infiniteSpace',
+					'label' => 'Tell Someone You Are A Red Stone',
 					'type' => 'autoResponder',
 					'config' =>
 						[
@@ -176,8 +178,8 @@ class FormModelTest extends TestCase
 		$this->assertSame('cf1', $model->getId());
 		$this->assertTrue($model->getProcessors()->hasProcessorOfType('autoResponder'));
 		$this->assertCount(2, $model->toArray()['processors']);
-		$this->assertEquals($array['processors'], $model->toArray()['processors']);
-		$this->assertEquals( 'Main Message', $model->toArray()['processors'][0]['label']);
-		$this->assertEquals( 'fld1', $model->toArray()['processors'][0]['config']['fromName']);
+		$this->assertEquals(array_values($array['processors']), array_values($model->toArray()['processors']));
+		$this->assertEquals( 'Tell Someone You Are A Red Stone', $model->toArray()['processors']['infiniteSpace']['label']);
+		$this->assertEquals( 'fld1', $model->toArray()['processors']['infiniteSpace']['config']['fromName']);
 	}
 }

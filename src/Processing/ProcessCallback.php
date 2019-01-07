@@ -31,6 +31,18 @@ abstract class ProcessCallback
 		$this->calderaForms = $calderaForms;
 	}
 
+	/**
+	 * Set the processor instance
+	 *
+	 * @param Processor $processor
+	 *
+	 * @return ProcessCallback
+	 */
+	public function setProcessor(Processor $processor) : ProcessCallback
+	{
+		$this->processor = $processor;
+		return $this;
+	}
 
 	/**
 	 * Get the Http Module.
@@ -72,9 +84,10 @@ abstract class ProcessCallback
 		$config = $this->getProcessorConfig();
 		if ($config->offsetExists($configFieldId)) {
 			$value = $config->offsetGet($configFieldId);
-			if ($formFields->hasField($value)) {
+
+			if ($formFields->offsetExists($value)) {
 				return $formFields
-					->getFieldValue($value);
+					->offsetGet($value);
 			}
 			return $value;
 		}

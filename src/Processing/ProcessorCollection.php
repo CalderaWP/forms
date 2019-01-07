@@ -39,10 +39,37 @@ class ProcessorCollection extends Collection implements ProcessorCollectionContr
 	}
 
 	/** @inheritdoc */
+	public function toArray(): array
+	{
+		$array = [];
+		if (! empty($this->items)) {
+			foreach ($this->items as $processorId => $processor) {
+				$array[$processorId]=$processor->toArray();
+			}
+		}
+		return $array;
+	}
+
+	/** @inheritdoc */
 	public function addProcessor(ProcessorContract $processor) : ProcessorCollectionContract
 	{
-		$this->items[] = $processor;
+		$this->items[$processor->getId()] = $processor;
 		return $this;
+	}
+
+	/**
+	 * Find item by ID
+	 *
+	 * @param string|int $id
+	 *
+	 * @return Processor|null
+	 */
+	public function getProcessor($id) : ?ProcessorContract
+	{
+		if ($this->has($id)) {
+			return $this->items[$id];
+		}
+		return null;
 	}
 
 	/** @inheritdoc */

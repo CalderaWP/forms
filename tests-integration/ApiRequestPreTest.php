@@ -7,6 +7,9 @@ use calderawp\caldera\Forms\FieldModel;
 use calderawp\caldera\Forms\FieldsArrayLike;
 use calderawp\caldera\Forms\FormArrayLike;
 use calderawp\caldera\Forms\FormModel;
+use calderawp\caldera\Forms\Processing\Processor;
+use calderawp\caldera\Forms\Processing\ProcessorConfig;
+use calderawp\caldera\Forms\Processing\ProcessorMeta;
 use calderawp\caldera\Forms\Processing\Types\ApiRequest;
 use calderawp\caldera\Forms\Processing\Types\Callbacks\ApiRequestPre;
 
@@ -24,11 +27,13 @@ use Psr\Http\Message\RequestInterface;
 class ApiRequestPreTest extends IntegrationTestCase
 {
 
+	/**
+	 * Test that process callback does the right processing.
+	 */
 	public function testProcess()
 	{
-		$this->markTestSkipped('Too hot. Come back hotter' );
 		$form = $this->getFormWithApiRequestProcessor();
-		$mockResponse = new Response(200, ['X-HELLO' => 'ROY'], json_encode(['messageFromServer' => 'Hi Server']));
+		$mockResponse = new Response(200, ['X-HELLO' => 'ROY'], json_encode(['messageFromServer' => 'Everything Is Possible.']));
 		$mock = new MockHandler([
 			$mockResponse,
 		]);
@@ -37,24 +42,22 @@ class ApiRequestPreTest extends IntegrationTestCase
 		$client = new Client(['handler' => $handler]);
 
 		\caldera()->getHttp()->setClient($client);
-		$form = new FormModel();
-		//$form->getProcessors()->get
-		//$calderaForms = new CalderaForms(\caldera(), new Container());
-		var_dump($form['processors']);exit;
-		$callback = new ApiRequestPre(
+
+		$processor = $form['processors']['superCool'];
+		$callback = (new ApiRequestPre(
 			$form,
-			$this->calderaForms()
-		);
+			\caldera()->getCalderaForms()
+		) )->setProcessor(Processor::fromArray($processor));
 
 		$request = new Request();
 		$request->setParams([
 			'fieldOne' => 'Seventeen Seconds',
-			'fieldTwo' => 17,
+			'fieldToUpdate' => 17,
 		]);
 		$formFields = new FieldsArrayLike();
 		$result = $callback->process($formFields,$request );
 		$this->assertEquals(
-			'Hi Server',
+			'Everything Is Possible.',
 			$formFields['messageFromApi']
 		);
 
@@ -73,10 +76,12 @@ class ApiRequestPreTest extends IntegrationTestCase
 			]
 		);
 		$model = FormModel::fromArray([
+			'id' => 'superGoodness',
 			'form' => $this->form(),
 			'fields' => [$field],
 			'processors' => [
 				[
+					'id' => 'superCool',
 					'type' => $apiRequestProcessor->getProcessorType(),
 					'label' => 'Test sending form data to test API',
 					'config' => [

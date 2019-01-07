@@ -40,6 +40,29 @@ class ProcessorMetaTest extends TestCase
 	/**
 	 * @covers \calderawp\caldera\Forms\Processing\ProcessorMeta::getId()
 	 */
+	public function testGetWhenSet()
+	{
+		$processorMeta = new ProcessorMeta();
+		$id = 'f11';
+		$processorMeta->setId($id);
+		$this->assertEquals($id, $processorMeta->getId());
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\ProcessorMeta::getId()
+	 */
+	public function testGetWhenSetFromArray()
+	{
+		$processorMeta = new ProcessorMeta();
+		$id = 'f11';
+		$processorMeta = new ProcessorMeta(['id' => $id]);
+		$this->assertEquals($id, $processorMeta->getId());
+	}
+
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\ProcessorMeta::getId()
+	 */
 	public function testGetId()
 	{
 		$processorMeta = new ProcessorMeta();
