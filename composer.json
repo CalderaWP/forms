@@ -30,11 +30,11 @@
     }
   },
   "scripts": {
-    "test": "composer test:unit",
-    "tests": "composer test:unit && && composer test:integration && composer test:acceptance",
+    "test": "composer tests",
+    "tests": "composer test:unit && composer test:integration && composer test:acceptance",
     "test:unit": "phpunit --testsuite=Unit",
     "test:integration": "phpunit --testsuite=Integration",
-    "test:acceptance": "ffphpunit --testsuite=Acceptance",
+    "test:acceptance": "phpunit --testsuite=Acceptance",
     "tests-now": "phpunit tests --group=now",
     "sniffs": "phpcs src/ && phpcs src/",
     "fixes": "phpcbf src/ && phpcbf tests/"

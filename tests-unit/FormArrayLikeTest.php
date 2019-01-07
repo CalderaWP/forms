@@ -52,4 +52,34 @@ class FormArrayLikeTest extends TestCase
 		$array = $formArray->toArray();
 		$this->assertSame($fieldId, $array['fields'][$fieldId]['id']);
 	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\FormModel::fromArray()
+	 * @covers \calderawp\caldera\Forms\FormModel::setProcessors()
+	 */
+	public function testSetProcessorsFromArray()
+	{
+		$array = [
+			'id' => 'cf1',
+			'fields' => [
+
+			],
+			'processors' => [
+				[
+					'label' => 'Extra Message',
+					'type' => 'autoResponder',
+					'config' =>
+						[
+							'fromName' => 'fld1',
+							'fromEmail' => 'x@e.com',
+						]
+				]
+			]
+		];
+
+		$model = FormModel::fromArray($array);
+		$arrayLike = FormArrayLike::fromModel($model);
+		$this->assertEquals('autoResponder',$arrayLike['processors'][0]['type']);
+		$this->assertEquals('x@e.com',$arrayLike['processors'][0]['config']['fromEmail']);
+	}
 }

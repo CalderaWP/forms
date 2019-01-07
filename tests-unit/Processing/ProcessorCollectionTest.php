@@ -99,4 +99,28 @@ class ProcessorCollectionTest extends TestCase
 
 
 	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\ProcessorCollection::fromArray()
+	 */
+	public function testFromArray(){
+		$processorArray = [
+			'type' => 'apiRequest',
+			'label' => 'Test sending form data to test API',
+			'config' => [
+				'requestURL' => 'https://something.com',
+				'requestMethod' => 'POST',
+				'responseField' => 'message',
+				'fieldToUpdate' => 'apiMessage',
+			]
+		];
+		$processor = Processor::fromArray($processorArray);
+		$processors = ProcessorCollection::fromArray([
+			$processorArray
+		]);
+
+		$this->assertTrue( $processors->hasProcessorOfType( 'apiRequest'));
+		$processorsToArray = $processors->toArray();
+		$this->assertSame($processorArray['config'],$processorsToArray[0]['config']);
+	}
 }

@@ -43,7 +43,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 			'processors',
 		]);
 		$formArrayLike = FormArrayLike::fromModel($form);
-		$callback = new class($formArrayLike) extends ProcessCallback
+		$callback = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
@@ -88,7 +88,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 			'processors',
 		]);
 		$formArrayLike = FormArrayLike::fromModel($form);
-		$callback = new class($formArrayLike) extends ProcessCallback
+		$callback = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
@@ -130,7 +130,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 			'formId' => 'form',
 		]);
 		$formArrayLike = FormArrayLike::fromModel($form);
-		$callback = new class($formArrayLike) extends ProcessCallback
+		$callback = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
@@ -177,7 +177,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 			'processors',
 		]);
 		$formArrayLike = FormArrayLike::fromModel($form);
-		$callbackPre = new class($formArrayLike) extends ProcessCallback
+		$callbackPre = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
@@ -185,7 +185,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 				return $formFields;
 			}
 		};
-		$callbackMain = new class($formArrayLike) extends ProcessCallback
+		$callbackMain = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
@@ -193,7 +193,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 				return $formFields;
 			}
 		};
-		$callbackPost = new class($formArrayLike) extends ProcessCallback
+		$callbackPost = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
@@ -260,7 +260,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 			->addForm($form);
 
 		$formArrayLike = FormArrayLike::fromModel($form);
-		$callbackPre = new class($formArrayLike) extends ProcessCallback
+		$callbackPre = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
@@ -338,7 +338,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 
 		$formArrayLike = FormArrayLike::fromModel($form);
 
-		$callbackMain = new class($formArrayLike) extends ProcessCallback
+		$callbackMain = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
@@ -445,7 +445,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 		]);
 
 		$formArrayLike = FormArrayLike::fromModel($form);
-		$callbackPre = new class($formArrayLike) extends ProcessCallback
+		$callbackPre = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request) : FormFields
 			{
@@ -453,7 +453,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 				return $formFields;
 			}
 		};
-		$callbackMain = new class($formArrayLike) extends ProcessCallback
+		$callbackMain = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{
@@ -462,7 +462,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 				return $formFields;
 			}
 		};
-		$callbackPost = new class($formArrayLike) extends ProcessCallback
+		$callbackPost = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{

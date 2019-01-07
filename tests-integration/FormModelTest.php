@@ -34,7 +34,7 @@ class FormModelTest extends IntegrationTestCase
 			'processors',
 		]);
 		$formArrayLike = FormArrayLike::fromModel($form);
-		$callbackPre = new class($formArrayLike) extends ProcessCallback
+		$callbackPre = new class($formArrayLike,$this->calderaForms()) extends ProcessCallback
 		{
 			public function process(FormFields $formFields, Request $request): FormFields
 			{

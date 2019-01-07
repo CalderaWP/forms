@@ -4,9 +4,11 @@
 namespace calderawp\caldera\Forms\Processing;
 
 use calderawp\caldera\Forms\FormArrayLike;
+use calderawp\caldera\Http\Contracts\CalderaHttpContract as CalderaHttp;
 use calderawp\interop\Contracts\FieldsArrayLike as FormFields;
 use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 use calderawp\interop\Contracts\ProcessorContract;
+use calderawp\caldera\Forms\Contracts\CalderaFormsContract as CalderaFormsModule;
 
 abstract class ProcessCallback
 {
@@ -18,11 +20,29 @@ abstract class ProcessCallback
 	 * @var ProcessorContract
 	 */
 	protected $processor;
-	public function __construct(FormArrayLike $form)
+
+	/**
+	 * @var CalderaFormsModule
+	 */
+	protected $calderaForms;
+	public function __construct(FormArrayLike $form, CalderaFormsModule $calderaForms )
 	{
 		$this->form = $form;
+		$this->calderaForms = $calderaForms;
 	}
 
+
+	/**
+	 * Get the Http Module.
+	 *
+	 * Use this to make any outgoing Http request
+	 *
+	 * @return CalderaHttp
+	 */
+	protected function getHttp() : CalderaHttp
+	{
+		return $this->calderaForms->getCore()->getHttp();
+	}
 
 	/**
 	 * This is where you process request.
@@ -49,7 +69,7 @@ abstract class ProcessCallback
 	 */
 	protected function getConfigFieldValue($configFieldId, FormFields $formFields)
 	{
-		$config = $this->processor->getProcessorConfig();
+		$config = $this->getProcessorConfig();
 		if ($config->offsetExists($configFieldId)) {
 			$value = $config->offsetGet($configFieldId);
 			if ($formFields->hasField($value)) {
@@ -59,4 +79,17 @@ abstract class ProcessCallback
 			return $value;
 		}
 	}
+
+	/**
+	 * Get saved processor settings
+	 *
+	 * @return ProcessorConfig
+	 */
+	protected function getProcessorConfig(): ProcessorConfig
+	{
+		$config = $this->processor->getProcessorConfig();
+		return $config;
+	}
+
+
 }

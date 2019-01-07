@@ -173,7 +173,7 @@ class ProcessorTest extends TestCase
 			]
 		);
 		$model = FormModel::fromArray([
-			'form' => $this->form(),
+			'form' => $this->fofrorm(),
 			'fields' => [$field],
 		]);
 
@@ -225,5 +225,42 @@ class ProcessorTest extends TestCase
 				]
 		];
 		$this->assertEquals($array, Processor::fromArray($array)->toArray());
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\Processor::toArray()
+	 */
+	public function testConfigFromArray()
+	{
+		$processor = [
+			'type' => 'apiRequest',
+			'label' => 'Test sending form data to test API',
+			'config' => [
+				'requestURL' => 'https://something.com',
+				'requestMethod' => 'POST',
+				'responseField' => 'message',
+				'fieldToUpdate' => 'apiMessage',
+			]
+		];
+		$processor = Processor::fromArray($processor);
+		$this->assertIsObject($processor->getProcessorConfig());
+		$config = $processor->getProcessorConfig();
+		$this->assertSame(
+			'https://something.com',
+			$config['requestURL']
+		);
+		$this->assertSame(
+			'POST',
+			$config['requestMethod']
+		);
+		$this->assertSame(
+			'message',
+			$config['responseField']
+		);
+		$this->assertSame(
+			'apiMessage',
+			$config['fieldToUpdate']
+		);
+
 	}
 }

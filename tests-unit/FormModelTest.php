@@ -177,5 +177,7 @@ class FormModelTest extends TestCase
 		$this->assertTrue($model->getProcessors()->hasProcessorOfType('autoResponder'));
 		$this->assertCount(2, $model->toArray()['processors']);
 		$this->assertEquals($array['processors'], $model->toArray()['processors']);
+		$this->assertEquals( 'Main Message', $model->toArray()['processors'][0]['label']);
+		$this->assertEquals( 'fld1', $model->toArray()['processors'][0]['config']['fromName']);
 	}
 }

@@ -10,11 +10,20 @@ use calderawp\interop\Collection;
 
 use calderawp\interop\Traits\ItemsIterator;
 
+/**
+ * Class ProcessorCollection
+ *
+ * Representation of 0 or more individual processors
+ * May be all processors of a form, or all processors that are installed.
+ */
 class ProcessorCollection extends Collection implements ProcessorCollectionContract, \IteratorAggregate
 {
 
-	use ItemsIterator;
+	use
+		//Allows for foreach to be used on instances of this class
+		ItemsIterator;
 
+	/** @inheritdoc */
 	public static function fromArray(array $items): InteroperableCollectionContract
 	{
 		$obj = new static;
