@@ -26,6 +26,7 @@ class ApiRequestPreTest extends IntegrationTestCase
 
 	public function testProcess()
 	{
+		$this->markTestSkipped('Too hot. Come back hotter' );
 		$form = $this->getFormWithApiRequestProcessor();
 		$mockResponse = new Response(200, ['X-HELLO' => 'ROY'], json_encode(['messageFromServer' => 'Hi Server']));
 		$mock = new MockHandler([
@@ -37,8 +38,8 @@ class ApiRequestPreTest extends IntegrationTestCase
 
 		\caldera()->getHttp()->setClient($client);
 		$form = new FormModel();
-		$form->getProcessors()->
-		$calderaForms = new CalderaForms(\caldera(), new Container());
+		//$form->getProcessors()->get
+		//$calderaForms = new CalderaForms(\caldera(), new Container());
 		var_dump($form['processors']);exit;
 		$callback = new ApiRequestPre(
 			$form,

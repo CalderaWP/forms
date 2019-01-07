@@ -2,8 +2,8 @@
 
 
 namespace calderawp\caldera\Forms\Processing\Types;
-use calderawp\interop\Contracts\ProcessesFormSubmissionContract;
 
+use calderawp\interop\Contracts\ProcessesFormSubmissionContract;
 
 abstract class ProcessorType
 {
@@ -25,5 +25,4 @@ abstract class ProcessorType
 	 * @return string
 	 */
 	abstract public function getProcessorType() : string;
-
 }

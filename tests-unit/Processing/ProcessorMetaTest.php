@@ -27,4 +27,27 @@ class ProcessorMetaTest extends TestCase
 		$this->assertEquals('password', $processorMeta[ 'type']);
 		$this->assertEquals('password', $processorMeta->getType());
 	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\ProcessorMeta::setId()
+	 */
+	public function testSetId()
+	{
+		$processorMeta = new ProcessorMeta(['id' => 'p55']);
+		$this->assertEquals('p55', $processorMeta['id']);
+	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\Processing\ProcessorMeta::getId()
+	 */
+	public function testGetId()
+	{
+		$processorMeta = new ProcessorMeta();
+		$id = $processorMeta->getId();
+		$this->assertStringStartsWith('p',$id);
+		$this->assertEquals($id, $processorMeta['id']);
+		$this->assertEquals($id, $processorMeta->getId());
+		$processorMeta->setId('f1');
+		$this->assertEquals('f1', $processorMeta->getId());
+	}
 }

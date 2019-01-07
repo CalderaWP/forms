@@ -8,9 +8,11 @@ use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 use calderawp\interop\Contracts\FieldsArrayLike as FormFields;
 
 use calderawp\interop\Contracts\ProcessorContract;
+use calderawp\interop\Traits\ProvidesIdGeneric;
 
 class Processor implements ProcessorContract
 {
+
 	/**
 	 * The name of the second stage of processing - the "pre-process" process.
 	 *

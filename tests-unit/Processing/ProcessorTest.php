@@ -173,7 +173,7 @@ class ProcessorTest extends TestCase
 			]
 		);
 		$model = FormModel::fromArray([
-			'form' => $this->fofrorm(),
+			'form' => $this->form(),
 			'fields' => [$field],
 		]);
 

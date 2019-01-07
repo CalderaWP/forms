@@ -25,7 +25,7 @@ abstract class ProcessCallback
 	 * @var CalderaFormsModule
 	 */
 	protected $calderaForms;
-	public function __construct(FormArrayLike $form, CalderaFormsModule $calderaForms )
+	public function __construct(FormArrayLike $form, CalderaFormsModule $calderaForms)
 	{
 		$this->form = $form;
 		$this->calderaForms = $calderaForms;
@@ -90,6 +90,4 @@ abstract class ProcessCallback
 		$config = $this->processor->getProcessorConfig();
 		return $config;
 	}
-
-
 }

@@ -3,9 +3,7 @@
 
 namespace calderawp\caldera\Forms\Processing\Types;
 
-
 use calderawp\caldera\Forms\Processing\ProcessorConfig;
-
 
 class ApiRequest extends ProcessorType
 {
@@ -27,5 +25,4 @@ class ApiRequest extends ProcessorType
 	{
 		return 'apiRequest';
 	}
-
 }
