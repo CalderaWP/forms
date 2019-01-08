@@ -54,8 +54,13 @@ class ApiRequestPreTest extends IntegrationTestCase
 
 		$request = new Request();
 		$request->setParams([
-			'fieldOne' => 'Seventeen Seconds',
-			'fieldToUpdate' => 17,
+			'formId' => 'x22',
+			'entryValues' => [
+				[
+					'fieldOne' => 'Seventeen Seconds',
+					'fieldToUpdate' => 17,
+				]
+			]
 		]);
 		$formFields = new FieldsArrayLike();
 		$result = $callback->process($formFields, $request);
@@ -141,8 +146,8 @@ class ApiRequestPreTest extends IntegrationTestCase
 			\caldera()->getCalderaForms()->getForms()->addForm($model);
 		}
 
-
 		return FormArrayLike::fromModel($model);
 	}
 
 }
+

@@ -5,13 +5,14 @@ namespace calderawp\caldera\Forms\Processing\Types\Callbacks;
 
 use calderawp\caldera\Forms\Exception;
 use calderawp\caldera\Forms\Processing\ProcessCallback;
-use calderawp\interop\Contracts\FieldsArrayLike as FormFields;
+use calderawp\interop\Contracts\FieldsArrayLike;
 use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 
 class ApiRequestPre extends ProcessCallback
 {
 
-	public function process(FormFields $formFields, Request $request): FormFields
+	/** @inheritdoc */
+	public function process(FieldsArrayLike $formFields, Request $request): FieldsArrayLike
 	{
 		$url = $this->getConfigFieldValue('requestURL', $formFields);
 		if (! filter_var($url, FILTER_VALIDATE_URL)) {

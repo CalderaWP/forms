@@ -11,7 +11,7 @@ abstract class ProcessorType implements ProcessorTypeContract
 	public function toArray(): array
 	{
 		return [
-
+			'type' => $this->getProcessorType()
 		];
 	}
 

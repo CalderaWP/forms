@@ -5,12 +5,13 @@ namespace calderawp\caldera\Forms\Processing;
 
 use calderawp\caldera\Forms\FormArrayLike;
 use calderawp\caldera\Http\Contracts\CalderaHttpContract as CalderaHttp;
-use calderawp\interop\Contracts\FieldsArrayLike as FormFields;
+use calderawp\interop\Contracts\FieldsArrayLike;
 use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 use calderawp\interop\Contracts\ProcessorContract;
 use calderawp\caldera\Forms\Contracts\CalderaFormsContract as CalderaFormsModule;
+use calderawp\caldera\Forms\Contracts\ProcessorCallbackContract;
 
-abstract class ProcessCallback
+abstract class ProcessCallback implements ProcessorCallbackContract
 {
 
 	/** @var FormArrayLike */
@@ -41,11 +42,11 @@ abstract class ProcessCallback
 	/**
 	 * Set the processor instance
 	 *
-	 * @param Processor $processor
+	 * @param ProcessorContract $processor
 	 *
 	 * @return ProcessCallback
 	 */
-	public function setProcessor(Processor $processor) : ProcessCallback
+	public function setProcessor(ProcessorContract $processor) : ProcessorCallbackContract
 	{
 		$this->processor = $processor;
 		return $this;
@@ -64,29 +65,16 @@ abstract class ProcessCallback
 	}
 
 	/**
-	 * This is where you process request.
-	 *
-	 * Throw an exception to have REST API/ CLI return error
-	 * Modify FormFields to update field values in database/ request
-	 *
-	 * @param FormFields $formFields Current values of form fields
-	 * @param Request $request Current request
-	 *
-	 * @return FormFields
-	 */
-	abstract public function process(FormFields $formFields, Request $request): FormFields;
-
-	/**
 	 * Find a config field value by ID.
 	 *
 	 * If value found and the value is the ID of a field, then the value of that field is returned.
 	 *
 	 * @param string $configFieldId Name of config field
-	 * @param FormFields $formFields Current form field values
+	 * @param FieldsArrayLike $formFields Current form field values
 	 *
 	 * @return mixed|null
 	 */
-	protected function getConfigFieldValue($configFieldId, FormFields $formFields)
+	protected function getConfigFieldValue($configFieldId, FieldsArrayLike $formFields)
 	{
 		$config = $this->getProcessorConfig();
 		if ($config->offsetExists($configFieldId)) {
