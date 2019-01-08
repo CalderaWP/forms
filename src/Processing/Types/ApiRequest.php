@@ -3,7 +3,9 @@
 
 namespace calderawp\caldera\Forms\Processing\Types;
 
+use calderawp\caldera\Forms\Processing\Processor;
 use calderawp\caldera\Forms\Processing\ProcessorConfig;
+use calderawp\caldera\Forms\Processing\Types\Callbacks\ApiRequestPre;
 
 class ApiRequest extends ProcessorType
 {
@@ -24,5 +26,13 @@ class ApiRequest extends ProcessorType
 	public function getProcessorType(): string
 	{
 		return 'apiRequest';
+	}
+
+	public function getCallbacks(): array
+	{
+		return [
+			Processor::PRE_PROCESS => ApiRequestPre::class,
+
+		];
 	}
 }

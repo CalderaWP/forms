@@ -7,6 +7,7 @@ use calderawp\caldera\Forms\Contracts\EntryContract as Entry;
 use calderawp\caldera\Forms\Contracts\FormModelContract as Form;
 use calderawp\caldera\Forms\Entry\EntryValue;
 use calderawp\caldera\Forms\FieldsArrayLike;
+use calderawp\caldera\Forms\FormArrayLike;
 use calderawp\caldera\Forms\Processing\Processor;
 use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 
@@ -93,13 +94,38 @@ class ProcessSubmissionFilters extends FilterFormData implements \calderawp\cald
 		}
 		$formFields = $this->createFieldsArrayLike($entry);
 		/** @var Processor $processor */
+		$processorTypes = \caldera()->getCalderaForms()->getProcessorTypes();
 		foreach ($processors as $processor) {
+			if (empty($processor->getCallbacks())) {
+				$processorType = isset($processorTypes[$processor->getProcessorType()])
+					? $processorTypes[$processor->getProcessorType()]
+					: null;
+				if ($processorType) {
+					$callbacks = $processorType->getCallbacks();
+					if (is_array($callbacks)) {
+						foreach ($callbacks as $i => $callback) {
+							if (is_string($callback)) {
+								$callback = new $callback(FormArrayLike::fromModel($form), \caldera()->getCalderaForms());
+								$callbacks[$i] = $callback;
+							}
+							$callback->setProcessor($processor);
+						}
+						$processor->setCallbacks($callbacks);
+					}
+				}
+			}
 			$formFields = $processor->preProcess($formFields, $request);
 		}
 
-		foreach ($formFields->toArray() as $fieldId => $fieldValue) {
-			$request->setParam($fieldId, $fieldValue);
+		$entryValues = $request->getParam('entryValues');
+		if (! is_array($entryValues)) {
+			$entryValues = [];
 		}
+		$request->setParam('entryValues', array_merge(
+			$entryValues,
+			$formFields->toArray()
+		));
+
 		return $entry;
 	}
 
@@ -122,6 +148,7 @@ class ProcessSubmissionFilters extends FilterFormData implements \calderawp\cald
 		}
 
 		$formFields = $this->createFieldsArrayLike($entry);
+
 		/** @var Processor $processor */
 		foreach ($processors as $processor) {
 			$formFields = $processor->mainProcess($formFields, $request);

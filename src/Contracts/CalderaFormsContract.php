@@ -3,6 +3,9 @@
 
 namespace calderawp\caldera\Forms\Contracts;
 
+use calderawp\caldera\Forms\Controllers\CalderaFormsController;
+use calderawp\caldera\Forms\Processing\Processor;
+use calderawp\caldera\Forms\Contracts\ProcessorTypeContract as ProcessorType;
 use calderawp\interop\Contracts\CalderaModule;
 use calderawp\interop\Exception;
 use \calderawp\caldera\Forms\Contracts\DataSourcesContract as DataSources;
@@ -57,4 +60,21 @@ interface CalderaFormsContract extends CalderaModule
 	 * @return DataSources
 	 */
 	public function getPrimaryDataSource(): DataSources;
+
+
+	/**
+	 * Add a processor type to the availble types.
+	 *
+	 * @param ProcessorTypeContract $processorType
+	 *
+	 * @return CalderaFormsContract
+	 */
+	public function addProcessorType(ProcessorType $processorType) : CalderaFormsContract;
+
+	/**
+	 * Get all processor types
+	 *
+	 * @return array
+	 */
+	public function getProcessorTypes() : array;
 }

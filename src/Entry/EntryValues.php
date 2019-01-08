@@ -107,6 +107,7 @@ class EntryValues implements CollectsEntryValues, Arrayable, \IteratorAggregate
 		if ($_value = $this->findByIdOrSlug($idOrSlug)) {
 			return $_value;
 		}
+		return null;
 	}
 
 	/**

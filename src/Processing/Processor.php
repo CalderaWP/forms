@@ -71,6 +71,27 @@ class Processor implements ProcessorContract
 		$this->form = $form;
 	}
 
+	/**
+	 * @return callable[]
+	 */
+	public function getCallbacks(): array
+	{
+		return $this->callbacks;
+	}
+
+	/**
+	 * @param callable[] $callbacks
+	 *
+	 * @return Processor
+	 */
+	public function setCallbacks(array $callbacks): Processor
+	{
+		$this->callbacks = $callbacks;
+		return $this;
+	}
+
+
+
 
 	/**
 	 * Create an object from an array.
@@ -210,6 +231,7 @@ class Processor implements ProcessorContract
 		if (array_key_exists($identifier, $this->callbacks)) {
 			return call_user_func($this->findCallback($identifier), $formFields, $request);
 		}
+
 		return $formFields;
 	}
 }

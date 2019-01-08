@@ -3,8 +3,11 @@
 
 namespace calderawp\caldera\Forms;
 
+use calderawp\caldera\Forms\Contracts\ProcessorTypeContract as ProcessorType;
+use calderawp\caldera\Forms\Contracts\ProcessorTypeContract;
 use calderawp\caldera\Forms\Filters\ProcessSubmissionFilters;
 use calderawp\caldera\Forms\Forms\ContactForm;
+use calderawp\caldera\Forms\Processing\Types\ApiRequest;
 use calderawp\CalderaContainers\Service\Container as ServiceContainer;
 use calderawp\interop\Contracts\CalderaModule;
 use calderawp\interop\Module;
@@ -21,6 +24,11 @@ class CalderaForms extends Module implements CalderaFormsContract
 	const IDENTIFIER = 'calderaForms';
 
 	protected $dataSources;
+
+	/**
+	 * @var array
+	 */
+	protected $processorTypes;
 	/**
 	 * @inheritDoc
 	 */
@@ -45,6 +53,8 @@ class CalderaForms extends Module implements CalderaFormsContract
 		});
 
 		$this->addHooks();
+
+		$this->addProcessorType(new ApiRequest());
 
 		return $this;
 	}
@@ -188,6 +198,24 @@ class CalderaForms extends Module implements CalderaFormsContract
 	{
 		return $this->dataSources;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function addProcessorType(ProcessorType $processorType): CalderaFormsContract
+	{
+		$this->processorTypes[$processorType->getProcessorType()] = $processorType;
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getProcessorTypes(): array
+	{
+		return ! empty($this->processorTypes) ? $this->processorTypes : [];
+	}
+
 
 	protected function hasPrimaryDataSourceSet() : bool
 	{

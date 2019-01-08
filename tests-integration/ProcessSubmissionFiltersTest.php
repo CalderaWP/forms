@@ -287,7 +287,7 @@ class ProcessSubmissionFiltersTest extends IntegrationTestCase
 		$controller = new EntryController($calderaForms);
 		$entry = $controller->createEntry(null, $request);
 		$values = $entry->getEntryValues()->toArray();
-		$this->assertSame('pre-email', $request->getParam('email'));
+		$this->assertSame('pre-email', $request->getParam('entryValues')['email']);
 	}
 
 	/**

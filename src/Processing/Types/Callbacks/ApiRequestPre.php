@@ -44,7 +44,6 @@ class ApiRequestPre extends ProcessCallback
 		if ($responseField && $fieldToUpdate) {
 			$formFields[$fieldToUpdate] = isset($response->getData()[$responseField]) ? $response->getData()[$responseField] : '';
 		}
-
 		return $formFields;
 	}
 }

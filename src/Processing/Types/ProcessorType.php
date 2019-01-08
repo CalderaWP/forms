@@ -3,9 +3,9 @@
 
 namespace calderawp\caldera\Forms\Processing\Types;
 
-use calderawp\interop\Contracts\ProcessesFormSubmissionContract;
+use calderawp\caldera\Forms\Contracts\ProcessorTypeContract;
 
-abstract class ProcessorType
+abstract class ProcessorType implements ProcessorTypeContract
 {
 	/** @inheritdoc */
 	public function toArray(): array
@@ -21,8 +21,9 @@ abstract class ProcessorType
 		$this->toArray();
 	}
 
-	/**
-	 * @return string
-	 */
+	/** @inheritdoc */
 	abstract public function getProcessorType() : string;
+
+	/** @inheritdoc */
+	abstract public function getCallbacks() : array;
 }
