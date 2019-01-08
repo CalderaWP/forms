@@ -25,6 +25,13 @@ abstract class ProcessCallback
 	 * @var CalderaFormsModule
 	 */
 	protected $calderaForms;
+
+	/**
+	 * ProcessCallback constructor.
+	 *
+	 * @param FormArrayLike $form
+	 * @param CalderaFormsModule $calderaForms
+	 */
 	public function __construct(FormArrayLike $form, CalderaFormsModule $calderaForms)
 	{
 		$this->form = $form;

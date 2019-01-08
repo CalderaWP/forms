@@ -15,6 +15,7 @@ The callbacks, which must (or fatal errors) extend `ProcessCallback` are where t
 * `ProcessorType` - Defines a type of processor that a user can chose.
 
 #### Processing Loop
+When processing a form submission, Caldera Forms will do four loops:
 
 * Validate Fields - Run default field validation and field validation processors.
 * Pre-Process - Run all pre-process callbacks to validate submission.
@@ -27,10 +28,16 @@ The callbacks, which must (or fatal errors) extend `ProcessCallback` are where t
     - Send emails here.
     - Not often used.
     
-## Creating A Processor
-** BTW `ProcessorType` should have an interface! **
+A processor may add a callback at any of these steps.
 
-To create a processor, you should begin with a class extending `ProcessorType`. This will force you to implement two methods:
+
+### Processor Meta
+
+### Processor Config
+    
+## Creating A Processor
+
+To create a processor, you should begin with a class extending `ProcessorType` or implement the contract. This will force you to implement two methods:
 
 * `getProcessorType()` - Return a string with the "slug" of the processor. For example "mailchimp" or "stripe".
 * `getCallbacks()` An array of zero or more processor callback functions. 
@@ -51,11 +58,21 @@ use calderawp\caldera\Forms\Processing\Processor;
 
 ### Creating Processor Callbacks
 
+At each processing stage, the process callback is provided a `FieldsArrayLike` with the current submission field values and the current request.
+
+At any stage in the process, throwing an exeception will cause the form processing to stop and return an error to the client. The error message is set from the exception's message property.
+
+At the pre-process stage, changing the values of the fields will cause the corresponding fields in the request to change. If entries are being saved, the effect of this is that the saved value will be be the value updated on the request object.
+
+At the main process and post-process stage, changing the values of the fields will cause the entry values -- including in the database if entry saving is enabled -- to change.
 
 #### Remote API Requests Must Use Http Package
 
 If you are creating a processor that makes Http requests to a 3rd-party API or something, you MUST use the CalderaHttp::send() method to send the request. Deviation will probably not be tolerated.
 
-### Unit Testing A Processor
+The README for the Http package describes how to do so.
+
+
+## Unit Testing A Processor
 
 

@@ -8,7 +8,6 @@ use calderawp\interop\Contracts\Rest\RestRequestContract as Request;
 use calderawp\interop\Contracts\FieldsArrayLike as FormFields;
 
 use calderawp\interop\Contracts\ProcessorContract;
-use calderawp\interop\Traits\ProvidesIdGeneric;
 
 class Processor implements ProcessorContract
 {
@@ -27,7 +26,7 @@ class Processor implements ProcessorContract
 	 *
 	 * Also known as "process"
 	 *
-	 * Runs after pre-processing, before saving entry data
+	 * Runs after pre-processing, after saving entry data
 	 */
 	const MAIN_PROCESS = 'mainProcessStage1';
 
