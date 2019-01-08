@@ -77,9 +77,7 @@ class ApiRequestPreTest extends IntegrationTestCase
 			$mockResponse,
 		]);
 		$handler = HandlerStack::create($mock);
-
 		$client = new Client(['handler' => $handler]);
-
 		\caldera()->getHttp()->setClient($client);
 
 		$entryController = new EntryController(\caldera()->getCalderaForms());
