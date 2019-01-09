@@ -1,6 +1,9 @@
 # Forms
 
-Provides form functionality, including entry tracking.
+This is the forms package of the Caldera framework and provides form functionality, including entry tracking.. This is not Caldera Forms.
+
+[Caldera Forms on Github](http://github.com/calderawp/caldera-forms/)
+[CalderaForms.com](http://calderaforms.com)
 
 ## Examples
 ### Form Model
