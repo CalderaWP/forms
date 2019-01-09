@@ -1,9 +1,14 @@
 # Forms
 
-This is the forms package of the Caldera framework and provides form functionality, including entry tracking.. This is not Caldera Forms.
+This is the forms package of the [Caldera Framework](https://github.com/CalderaWP/caldera) and provides form functionality, including entry tracking. __This is not Caldera Forms__.
 
-[Caldera Forms on Github](http://github.com/calderawp/caldera-forms/)
-[CalderaForms.com](http://calderaforms.com)
+## 👀🌋 This Is A Module Of The [Caldera Framework](https://github.com/CalderaWP/caldera)
+* 🌋 Find Caldera Forms Here:
+    - [Caldera Forms on Github](http://github.com/calderawp/caldera-forms/)
+    - [CalderaForms.com](http://calderaforms.com)
+    
+* 🌋 [Issues](https://github.com/CalderaWP/caldera/issues) and [pull requests](https://github.com/CalderaWP/caldera/pulls), should be submitted to the [main Caldera repo](https://github.com/CalderaWP/caldera/pulls).
+
 
 ## Examples
 ### Form Model
