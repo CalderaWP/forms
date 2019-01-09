@@ -9,6 +9,12 @@ This is the forms package of the [Caldera Framework](https://github.com/CalderaW
     
 * 🌋 [Issues](https://github.com/CalderaWP/caldera/issues) and [pull requests](https://github.com/CalderaWP/caldera/pulls), should be submitted to the [main Caldera repo](https://github.com/CalderaWP/caldera/pulls).
 
+### Install
+* Add to your package:
+    - `composer require calderawp/forms`
+* Install for development:
+    - `git clone git@github.com:CalderaWP/forms.git && composer install`
+
 
 ## Examples
 ### Form Model
