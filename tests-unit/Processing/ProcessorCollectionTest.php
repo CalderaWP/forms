@@ -156,9 +156,19 @@ class ProcessorCollectionTest extends TestCase
 		];
 		$processor = Processor::fromArray($processorArray);
 		$processors = ProcessorCollection::fromArray([
-			$processorArray
+			$processorArray,
+			[
+				'id' => 'p2',
+				'type' => 'mailchimp',
+				'label' => 'Main Mailchimp',
+				'config' => [
+					'listId' => '7',
+					'requestMethod' => 'POST',
+					'responseField' => 'message',
+					'fieldToUpdate' => 'apiMessage',
+				]
+			]
 		]);
-
 		$this->assertTrue( $processors->hasProcessorOfType( 'apiRequest'));
 		$processorsToArray = $processors->toArray();
 		$this->assertSame($processorArray['config'],$processorsToArray['season7Episode2']['config']);
