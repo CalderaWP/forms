@@ -216,7 +216,6 @@ class CalderaForms extends Module implements CalderaFormsContract
 		return ! empty($this->processorTypes) ? $this->processorTypes : [];
 	}
 
-
 	protected function hasPrimaryDataSourceSet() : bool
 	{
 		return isset($this->dataSources);

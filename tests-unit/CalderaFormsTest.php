@@ -169,4 +169,14 @@ class CalderaFormsTest extends TestCase
 		$calderaForms->setPrimaryDataSource($sources);
 		$this->assertSame($sources, $calderaForms->getPrimaryDataSource());
 	}
+
+	/**
+	 * @covers \calderawp\caldera\Forms\CalderaForms::getProcessorTypes
+	 */
+	public function testGetProcessorTypes()
+	{
+		$calderaForms = $this->calderaForms();
+		$this->assertArrayHasKey('apiRequest', $calderaForms->getProcessorTypes());
+
+	}
 }
