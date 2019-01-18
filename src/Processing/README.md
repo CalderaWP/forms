@@ -75,6 +75,8 @@ To create a processor, you should begin with a class extending `ProcessorType` o
 * `getProcessorType()` - Return a string with the "slug" of the processor. For example "mailchimp" or "stripe".
 * `getCallbacks()` An array of zero or more processor callback functions. 
 
+
+### Create Processor Config
 This object is created by the submission processes. 
 
 ```php

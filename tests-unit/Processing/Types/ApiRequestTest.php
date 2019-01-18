@@ -4,6 +4,7 @@ namespace calderawp\caldera\Forms\Tests\Processing\Types;
 
 use calderawp\caldera\Forms\Processing\Processor;
 use calderawp\caldera\Forms\Processing\Types\ApiRequest;
+use calderawp\caldera\Http\Request;
 use PHPUnit\Framework\TestCase;
 
 class ApiRequestTest extends TestCase
@@ -23,7 +24,13 @@ class ApiRequestTest extends TestCase
 	 */
 	public function testGetProcessorType()
 	{
+		$request = new Request();
+		$request->setParam('apiKey', 'dsadfssdf' );
+
+		$maiLChimpClient = new MC;
+		$maiLChimpClient->getLists($request);
 		$processor = new ApiRequest();
 		$this->assertEquals( 'apiRequest', $processor->getProcessorType() );
 	}
 }
+
