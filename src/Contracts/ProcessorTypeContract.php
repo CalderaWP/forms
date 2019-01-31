@@ -18,5 +18,4 @@ interface ProcessorTypeContract
 	 * @return array
 	 */
 	public function getCallbacks() : array;
-
 }
