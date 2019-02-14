@@ -14,14 +14,12 @@ class FormsDataSources implements \calderawp\caldera\Forms\Contracts\DataSources
 	protected $formsSource;
 	protected $entrySource;
 	protected $entryValuesSource;
-	protected $resultHandlers;
 
-	public function __construct(Source $formsSource, Source $entrySource, Source $entryValuesSource, ResultHandlers $resultHandlers)
+	public function __construct(Source $formsSource, Source $entrySource, Source $entryValuesSource)
 	{
 		$this->formsSource = $formsSource;
 		$this->entrySource = $entrySource;
 		$this->entryValuesSource = $entryValuesSource;
-		$this->resultHandlers = $resultHandlers;
 	}
 
 	/** @inheritdoc */
